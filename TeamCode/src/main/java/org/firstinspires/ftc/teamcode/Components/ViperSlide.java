@@ -226,9 +226,7 @@ public class ViperSlide{
         }
 
         if(scoreSpecimen) {
-            Actions.runBlocking(
-                    new SequentialAction(specimenAction)
-            );
+            goToPosition(2600);
             bucketSpecimen();
 
         }
