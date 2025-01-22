@@ -122,8 +122,8 @@ public class ViperSlide{
             Boolean grabSpecimen,
             Boolean releaseSpecimen,
             Boolean bucketSpecimen,
-            Boolean bucketSpecimenReset,
-            Boolean scoreSpecimen
+            Boolean bucketSpecimenReset
+//            Boolean scoreSpecimen
     ) {
         // Move Viper
         if (retractSpeed != 0) {
@@ -155,12 +155,16 @@ public class ViperSlide{
 
         // Bucket
         if(bucketScore) { // TODO close specimen grabber so we can flip
-            if(getPos() > minFlipLimit && Objects.equals(specimenGrabberPos, "closed")) {
-                closeBucket();
-                bucketScore();
-            }
-            else {
-                bucketCooldownTimer = new ElapsedTime();
+            if(getPos() > minFlipLimit) {
+                if(Objects.equals(specimenGrabberPos, "open")) {
+                    grabSpecimen();
+
+                }
+                else if(Objects.equals(specimenGrabberPos, "closed")) {
+                    telemetry.addData("grabber pos", "was closed");
+                    closeBucket();
+                    bucketScore();
+                }
             }
         }
 
@@ -215,21 +219,23 @@ public class ViperSlide{
 
         if(bucketSpecimen) {
             bucketSpecimen();
+            closeBucket();
         }
 
         if(bucketSpecimenReset) {
             bucketRest();
+            openBucket();
         }
 
-        if(wasScorePressed && !scoreSpecimen) {
-            telemetry.addData("Score Specimen", "released");
-        }
+//        if(wasScorePressed && !scoreSpecimen) {
+//            telemetry.addData("Score Specimen", "released");
+//        }
 
-        if(scoreSpecimen) {
-            goToPosition(2600);
-            bucketSpecimen();
-
-        }
+//        if(scoreSpecimen) {
+//            goToPosition(2600);
+//            bucketSpecimen();
+//
+//        }
 
 //        if(goToPositionUp) {
 //            goToPositionTest(2000);
@@ -407,11 +413,13 @@ public class ViperSlide{
     public void grabSpecimen() {
         leftSpecimen.setPosition(0);
         rightSpecimen.setPosition(.7);
+        specimenGrabberPos = "closed";
     }
 
     public void releaseSpecimen() {
         leftSpecimen.setPosition(.6);
         rightSpecimen.setPosition(.4);
+        specimenGrabberPos = "open";
     }
 }
 

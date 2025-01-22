@@ -51,7 +51,6 @@ public class TeleOpTest extends LinearOpMode {
 
         while (opModeIsActive() && !emergencyStop) {
             debug.checkDebugButtons(gamepad1);
-            debug.log("test");
         }
 
         telemetry.addData("Status", "Initialized");
