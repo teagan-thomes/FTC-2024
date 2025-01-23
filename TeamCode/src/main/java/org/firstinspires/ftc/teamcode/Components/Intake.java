@@ -102,7 +102,7 @@ public class Intake {
     }
 
     public void wristDown() {
-        setWristPosition(.95, .05);
+        setWristPosition(.91, .32); // .95 and .375
     }
 
     public void wristUp() {
@@ -110,8 +110,8 @@ public class Intake {
     }
 
     public void wristHalf() {
-        setWristPosition(0.6, 0.4);
-    }
+        setWristPosition(0.6, 0.65);
+    } // .6 and .4
 
     public void grabberSuck() {
         setGrabberPosition(0, 1);
