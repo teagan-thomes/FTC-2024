@@ -1,4 +1,4 @@
-OPEN TERMINAL
+**OPEN TERMINAL**
 
 adb connect 192.168.43.1
 adb disconnect

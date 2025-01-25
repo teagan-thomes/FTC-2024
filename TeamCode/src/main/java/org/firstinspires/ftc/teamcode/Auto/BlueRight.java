@@ -93,7 +93,7 @@ public class BlueRight extends LinearOpMode {
 
         //driveToScorePre
         TrajectoryActionBuilder traj1 = drive.actionBuilder(initialPose)
-                .strafeTo(new Vector2d(25.25, 0),
+                .strafeTo(new Vector2d(25.75, 0),
                         scoreVelConstraint,
                         scoreAccelConstraint);
 
@@ -144,7 +144,7 @@ public class BlueRight extends LinearOpMode {
 
         //driveToScoreFirst
         TrajectoryActionBuilder traj10 = traj9.endTrajectory().fresh()
-                .strafeToLinearHeading(new Vector2d(25.25, 4), Math.toRadians(-180),
+                .strafeToLinearHeading(new Vector2d(25.75, 4), Math.toRadians(-180),
                         scoreVelConstraint,
                         scoreAccelConstraint);
 
