@@ -51,6 +51,22 @@ public class TeleOpTest extends LinearOpMode {
 
         while (opModeIsActive() && !emergencyStop) {
             debug.checkDebugButtons(gamepad1);
+            viperSlide.checkInputs(
+                    gamepad2.left_trigger,        // retract
+                    gamepad2.right_trigger,       // extend
+                    gamepad2.guide,               // reset encoders
+//                    gamepad2.back,                // hold viper position
+                    gamepad2.x,                   // bucket rest
+                    gamepad2.y,                   // bucket score
+                    gamepad2.b,                   // open bucket
+                    gamepad2.a,                   // close bucket
+//                    gamepad2.b,                 // open/close bucket
+                    gamepad2.dpad_down,           // grab specimen
+                    gamepad2.dpad_up,             // release specimen
+                    gamepad2.dpad_left,           // bucket specimen
+                    gamepad2.dpad_right,
+                    gamepad2.back                 // score specimen
+            );
             debug.log("test");
         }
 
