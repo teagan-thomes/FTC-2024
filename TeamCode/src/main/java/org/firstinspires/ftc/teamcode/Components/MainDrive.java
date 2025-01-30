@@ -18,6 +18,8 @@ public class MainDrive {
     private final Telemetry telemetry;
     private final Gamepad gamepad1;
 
+    public double speedLimit = 1; // not limiting speed
+
     double frontLeftPower;
     double backLeftPower;
     double frontRightPower;
@@ -64,8 +66,7 @@ public class MainDrive {
         if (halfSpeedButton != 0) {
             divideAmount = 2;
         } else if (fourthSpeedButton != 0) {
-            divideAmount = 3;
-            //TODO used to be 4
+            divideAmount = 3; // not actually 1/4
         } else {
             divideAmount = 1;
         }
@@ -119,9 +120,9 @@ public class MainDrive {
     }
 
     void updateMotors() {
-        frontLeft.setPower(frontLeftPower / divideAmount);
-        backLeft.setPower(backLeftPower / divideAmount);
-        frontRight.setPower(frontRightPower / divideAmount);
-        backRight.setPower(backRightPower / divideAmount);
+        frontLeft.setPower((frontLeftPower / divideAmount) / speedLimit);
+        backLeft.setPower((backLeftPower / divideAmount) / speedLimit);
+        frontRight.setPower((frontRightPower / divideAmount) / speedLimit);
+        backRight.setPower((backRightPower / divideAmount) / speedLimit);
     }
 }

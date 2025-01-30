@@ -11,8 +11,8 @@ import org.firstinspires.ftc.teamcode.Components.MainDrive;
 import org.firstinspires.ftc.teamcode.Components.ViperSlide;
 import org.firstinspires.ftc.teamcode.Debug.Debug;
 
-@TeleOp(name = "TeleOpMain", group = "Main")
-public class TeleOpMain extends LinearOpMode {
+@TeleOp(name = "TeleOpDemo", group = "Demo")
+public class TeleOpDemo extends LinearOpMode {
 
     public DcMotorEx frontLeft;
     public DcMotorEx backLeft;
@@ -58,6 +58,8 @@ public class TeleOpMain extends LinearOpMode {
 
         waitForStart();
 
+
+        mainDrive.speedLimit = 2;
 
 
 
@@ -130,14 +132,6 @@ public class TeleOpMain extends LinearOpMode {
                     gamepad2.right_bumper,        // intake on
                     gamepad2.left_bumper          // intake reverse
 
-            );
-
-
-
-            debug.checkDebugButtons(
-                    (gamepad1.start && gamepad1.back),
-                    gamepad1.dpad_up,
-                    gamepad1.dpad_down
             );
 
             telemetry.update();
