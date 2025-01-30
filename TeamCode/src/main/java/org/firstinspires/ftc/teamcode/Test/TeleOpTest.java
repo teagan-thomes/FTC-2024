@@ -50,7 +50,12 @@ public class TeleOpTest extends LinearOpMode {
         waitForStart();
 
         while (opModeIsActive() && !emergencyStop) {
-            debug.checkDebugButtons(gamepad1);
+            debug.checkDebugButtons(
+                    (gamepad1.start && gamepad1.back),
+                    gamepad1.dpad_up,
+                    gamepad1.dpad_down
+            );
+
             viperSlide.checkInputs(
                     gamepad2.left_trigger,        // retract
                     gamepad2.right_trigger,       // extend
@@ -69,6 +74,9 @@ public class TeleOpTest extends LinearOpMode {
             );
             debug.log("test");
         }
+
+        debug.log("default target position tolerance: " + ViperSlide.leftViper.getTargetPositionTolerance());
+
 
         telemetry.addData("Status", "Initialized");
         telemetry.update();

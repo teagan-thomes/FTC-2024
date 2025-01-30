@@ -26,7 +26,7 @@ import java.util.stream.Collectors;
 import java.util.Timer;
 
 public class ViperSlide{
-    private DcMotorEx leftViper;
+    public static DcMotorEx leftViper;
     private DcMotorEx rightViper;
 
     private Servo leftBucket;

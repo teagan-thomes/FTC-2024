@@ -19,6 +19,8 @@ public class Debug {
 
     private File logFile;
 
+    public double targetPosTolerance;
+
     public Debug(OpMode opMode) {
         this.opMode = opMode;
         this.telemetry = opMode.telemetry;
@@ -50,12 +52,23 @@ public class Debug {
         }
     }
 
-    public void checkDebugButtons(Gamepad gamepad) {
-        if (gamepad.start && gamepad.back) {
+    public void checkDebugButtons(Boolean toggleDebug, Boolean increaseValue, Boolean decreaseValue) {
+        if (toggleDebug) {
             debugMode = !debugMode;
             telemetry.addData("debug mode: ", debugMode);
             telemetry.update();
         }
+
+        if(debugMode) {
+            if(increaseValue) {
+                targetPosTolerance++;
+            }
+            else if(decreaseValue) {
+                targetPosTolerance--;
+            }
+        }
+
+
     }
 
     public void log(String message) {
