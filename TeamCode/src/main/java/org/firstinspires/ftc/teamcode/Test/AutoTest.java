@@ -45,8 +45,8 @@ public class AutoTest extends LinearOpMode {
 
         BucketFlapAction openBucket = new BucketFlapAction(viperSlide, "open", 1000);
         BucketFlapAction closeBucket = new BucketFlapAction(viperSlide, "close");
-        BucketScoreAction bucketScore = new BucketScoreAction(viperSlide);
-        BucketRestAction bucketRest = new BucketRestAction(viperSlide);
+        BucketScoreAction bucketScore = new BucketScoreAction(viperSlide, 0);
+        BucketRestAction bucketRest = new BucketRestAction(viperSlide, 0);
 
         SpecimenGrabberGrabAction grabSpecimen = new SpecimenGrabberGrabAction(viperSlide, 0);
         SpecimenGrabberReleaseAction releaseSpecimen = new SpecimenGrabberReleaseAction(viperSlide, 0);

@@ -140,8 +140,8 @@ public class BlueLeftAscent extends LinearOpMode {
 
         BucketFlapAction bucketOpen = new BucketFlapAction(viperSlide, "open", 800);
         BucketFlapAction bucketClose = new BucketFlapAction(viperSlide, "close");
-        BucketScoreAction bucketScore = new BucketScoreAction(viperSlide);
-        BucketRestAction bucketRest = new BucketRestAction(viperSlide);
+        BucketScoreAction bucketScore = new BucketScoreAction(viperSlide, 0);
+        BucketRestAction bucketRest = new BucketRestAction(viperSlide, 0);
 
         hSlideToPositionAction hSlideForward = new hSlideToPositionAction(hSlide, 80);
         hSlideToPositionAction hSlideBackward = new hSlideToPositionAction(hSlide, -10);

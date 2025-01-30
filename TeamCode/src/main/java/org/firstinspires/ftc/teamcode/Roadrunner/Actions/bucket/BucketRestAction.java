@@ -4,21 +4,38 @@ import androidx.annotation.NonNull;
 
 import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
 import com.acmerobotics.roadrunner.Action;
+import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.Components.ViperSlide;
 
 public class BucketRestAction implements Action {
     private ViperSlide viperSlide;
+    private final ElapsedTime timer;
+    private final long delay;
+    private boolean hasStarted;
 
-    public BucketRestAction(ViperSlide viperSlide) {
+    public BucketRestAction(ViperSlide viperSlide, long delay) {
         this.viperSlide = viperSlide;
+        this.delay = delay;
+        this.timer = new ElapsedTime();
+        this.timer.reset(); // Initialize the timer when the action is created
+        this.hasStarted = false;
     }
 
     @Override
     public boolean run(@NonNull TelemetryPacket telemetryPacket) {
-        viperSlide.bucketRest();
+        if (!hasStarted) {
+            // Reset the timer only when the action is actually triggered
+            timer.reset();
+            hasStarted = true; // Mark that the action has started
+        }
 
-        return false;
+        if (timer.milliseconds() > delay) {
+            viperSlide.bucketRest();
+            hasStarted = false;
+            return false;
+        }
+        return true;
     }
 }
 

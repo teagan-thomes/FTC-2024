@@ -179,7 +179,7 @@ public class BlueRight extends LinearOpMode {
         ViperStopAction viperStop = new ViperStopAction(viperSlide);
 
         BucketSpecimenAction bucketSpecimen = new BucketSpecimenAction(viperSlide, 1000);
-        BucketRestAction bucketRest = new BucketRestAction(viperSlide);
+        BucketRestAction bucketRest = new BucketRestAction(viperSlide, 0);
 
         SpecimenGrabberGrabAction specimenGrab = new SpecimenGrabberGrabAction(viperSlide, 0);
         SpecimenGrabberReleaseAction specimenRelease = new SpecimenGrabberReleaseAction(viperSlide, 525);
