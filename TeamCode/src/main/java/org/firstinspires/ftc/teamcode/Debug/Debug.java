@@ -68,6 +68,26 @@ public class Debug {
         }
     }
 
+    public void log(int message) {
+        try {
+            FileWriter writer = new FileWriter(logFile, true);
+            writer.write(message + " ");
+            writer.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void log(double message) {
+        try {
+            FileWriter writer = new FileWriter(logFile, true);
+            writer.write(message + " ");
+            writer.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
     public String getLogFilePath() {
         return logFile.getAbsolutePath();
     }
