@@ -70,58 +70,43 @@ public class BlueLeft extends LinearOpMode {
 
 
         VelConstraint slowVelConstraint = new MinVelConstraint(Arrays.asList(
-                new TranslationalVelConstraint(10),
+                new TranslationalVelConstraint(20),
                 new AngularVelConstraint(Math.PI / 2)
         ));
         AccelConstraint slowAccelConstraint = new ProfileAccelConstraint(-10, 20);
 
-        double scorexPos = 11.2;
-        double scoreyPos = 17.3;
-        double pickUpxPos1 = 16;
-        double pickUpxPos2 = 22;
+        double scorexPos = 10.3; //10.8
+        double scoreyPos = 17;
+        double pickUpxPos1 = 14.5;
+        double pickUpxPos2 = 18;
 
         //driveToScorePre
-//        TrajectoryActionBuilder traj1 = drive.actionBuilder(initialPose)
-//                .strafeTo(new Vector2d(scorexPos, 0),
-//                        baseVelConstraint,
-//                        baseAccelConstraint)
-//                .waitSeconds(.25);
         TrajectoryActionBuilder traj2 = drive.actionBuilder(initialPose)
                 .strafeToLinearHeading(new Vector2d(scorexPos, scoreyPos), Math.toRadians(-45),
-                        slowVelConstraint,
-                        slowAccelConstraint);
-
-        //driveToFirstPickUp
-//        TrajectoryActionBuilder traj3 = traj2.endTrajectory().fresh()
-//                .strafeToLinearHeading(new Vector2d(pickUpxPos1, 12), Math.toRadians(0),
-//                        baseVelConstraint,
-//                        baseAccelConstraint);
-
-        TrajectoryActionBuilder traj3 = traj2.endTrajectory().fresh()
-                .splineToLinearHeading(new Pose2d(pickUpxPos1, 12, Math.toRadians(0)), Math.toRadians(0),
                         baseVelConstraint,
                         baseAccelConstraint);
 
-//        TrajectoryActionBuilder traj4 = traj3.endTrajectory().fresh()
-//                .strafeToLinearHeading(new Vector2d(pickUpxPos2, 12), Math.toRadians(0),
-//                        baseVelConstraint,
-//                        baseAccelConstraint);
+        //driveToPickUpFirst
+        TrajectoryActionBuilder traj3 = traj2.endTrajectory().fresh()
+                .splineToLinearHeading(new Pose2d(pickUpxPos1, 13, Math.toRadians(0)), Math.toRadians(0),
+                        baseVelConstraint,
+                        baseAccelConstraint)
+                .strafeToLinearHeading(new Vector2d(pickUpxPos2, 13), Math.toRadians(0),
+                        baseVelConstraint,
+                        baseAccelConstraint);
 
         //driveToScoreFirst
         TrajectoryActionBuilder traj5 = traj3.endTrajectory().fresh()
                 .strafeToLinearHeading(new Vector2d(scorexPos, scoreyPos), Math.toRadians(-45),
                         baseVelConstraint,
-                        baseAccelConstraint)
-//                .splineToLinearHeading(new Pose2d(10, -80, Math.toRadians(0)), Math.PI / 2)
-                ;
-
-        //driveToSecondPickUp
-        TrajectoryActionBuilder traj6 = traj5.endTrajectory().fresh()
-                .strafeToLinearHeading(new Vector2d(pickUpxPos1, 22), Math.toRadians(0),
-                        baseVelConstraint,
                         baseAccelConstraint);
-        TrajectoryActionBuilder traj7 = traj6.endTrajectory().fresh()
-                .strafeToLinearHeading(new Vector2d(pickUpxPos2, 22), Math.toRadians(0),
+
+        //driveToPickUpSecond
+        TrajectoryActionBuilder traj7 = traj5.endTrajectory().fresh()
+                .splineToLinearHeading(new Pose2d(pickUpxPos1, 23, Math.toRadians(0)), Math.toRadians(0),
+                        baseVelConstraint,
+                        baseAccelConstraint)
+                .strafeToLinearHeading(new Vector2d(pickUpxPos2, 23), Math.toRadians(0),
                         baseVelConstraint,
                         baseAccelConstraint);
 
@@ -131,15 +116,30 @@ public class BlueLeft extends LinearOpMode {
                         baseVelConstraint,
                         baseAccelConstraint);
 
-        //driveToThirdPickUp
+        //driveToPickUpThird
         TrajectoryActionBuilder traj9 = traj8.endTrajectory().fresh()
-                .strafeToLinearHeading(new Vector2d(pickUpxPos1, 27), Math.toRadians(45),
+                .splineToLinearHeading(new Pose2d((pickUpxPos1 + 3), 16, Math.toRadians(42.5)), Math.toRadians(0),
+                        baseVelConstraint,
+                        baseAccelConstraint)
+                .strafeToLinearHeading(new Vector2d((pickUpxPos1 + 3 + 5), 22), Math.toRadians(42.5),
+                        baseVelConstraint,
+                        baseAccelConstraint);
+
+        //driveToScoreThird
+        TrajectoryActionBuilder traj10 = traj9.endTrajectory().fresh()
+                .strafeToLinearHeading(new Vector2d(scorexPos, scoreyPos), Math.toRadians(-45),
+                        baseVelConstraint,
+                        baseAccelConstraint);
+
+        //driveToHang
+        TrajectoryActionBuilder traj11 = traj10.endTrajectory().fresh()
+                .splineToLinearHeading(new Pose2d(30, 15, Math.toRadians(90)), Math.toRadians(0),
                         baseVelConstraint,
                         baseAccelConstraint);
 
         //Actions
         ViperToPositionAction viperAllTheWayUpAtTheTopToScoreASampleInHighBucket = new ViperToPositionAction(viperSlide, 4350);
-//        ViperDownForTimeAction viperDownForTime = new ViperDownForTimeAction(viperSlide, 1000);
+        ViperDownForTimeAction viperDownALittle = new ViperDownForTimeAction(viperSlide, 250);
         ViperToRestAction viperToRest = new ViperToRestAction(viperSlide);
         ViperStopAction viperStop = new ViperStopAction(viperSlide);
 
@@ -154,8 +154,10 @@ public class BlueLeft extends LinearOpMode {
         WristDownAction wristDown = new WristDownAction(intake);
         WristUpAction wristUp = new WristUpAction(intake);
 
-        GrabberSuckAction grabberSuck = new GrabberSuckAction(intake, 3000);
-        GrabberSpitAction grabberSpit = new GrabberSpitAction(intake, 2000, 750);
+        GrabberSuckAction grabberSuck = new GrabberSuckAction(intake, 2000);
+        GrabberSuckAction grabberSuckLonger = new GrabberSuckAction(intake, 2500);
+
+        GrabberSpitAction grabberSpit = new GrabberSpitAction(intake, 2000, 1250);
 
 
         // Between initialization and start
@@ -169,62 +171,150 @@ public class BlueLeft extends LinearOpMode {
 
         if (isStopRequested() || gamepad1.b) return;
 
-//        Action driveToScorePre1 = traj1.build();
-        Action driveToScorePre2 = traj2.build();
-        Action driveToFirstPickUp1 = traj3.build();
-//        Action driveToFirstPickUp2 = traj4.build();
+        Action driveToScorePre = traj2.build();
+        Action driveToPickUpFirst = traj3.build();
         Action driveToScoreFirst = traj5.build();
-        Action driveToSecondPickUp1 = traj6.build();
-        Action driveToSecondPickUp2 = traj7.build();
+        Action driveToPickUpSecond = traj7.build();
         Action driveToScoreSecond = traj8.build();
-        Action driveToThirdPickUp1 = traj9.build();
-
+        Action driveToPickUpThird = traj9.build();
+        Action driveToScoreThird = traj10.build();
+        Action driveToHang1 = traj11.build();
 
         // Start
         telemetry.addData("Status", "Running");
         telemetry.update();
 
-        // score pre
-//        Actions.runBlocking(driveToScorePre1);
-        Actions.runBlocking(
-                new ParallelAction(
-                        driveToScorePre2,
-                        viperAllTheWayUpAtTheTopToScoreASampleInHighBucket,
-                        bucketClose,
-                        bucketScore,
-                        hSlideForward
-                )
-        );
         Actions.runBlocking(
                 new SequentialAction(
-                        viperStop,
-                        bucketOpen
-                )
-        );
-//        Actions.runBlocking(
-//                new ParallelAction(
-//                        viperDownForTime
-//                )
-//        );
 
-        // pick up first
-        Actions.runBlocking(
-                new ParallelAction(
-                        driveToFirstPickUp1,
-                        viperToRest,
-                        bucketRest,
-                        wristDown,
-                        grabberSuck
+                        //score preload
+                        new ParallelAction(
+                                driveToScorePre,
+                                viperAllTheWayUpAtTheTopToScoreASampleInHighBucket,
+                                bucketClose,
+                                bucketScore,
+                                hSlideForward,
+                                wristDown
+                                ),
+
+                        viperStop,
+                        bucketOpen,
+                        viperDownALittle,
+
+                        //pick up +1
+                        new ParallelAction(
+                                driveToPickUpFirst,
+                                viperToRest,
+                                bucketRest,
+                                grabberSuck
+                        ),
+
+                        //drive to score +1
+                        new ParallelAction(
+                                driveToScoreFirst,
+                                wristUp,
+                                hSlideBackward,
+                                grabberSpit
+                        )
                 )
         );
-//        Actions.runBlocking(
-//                new ParallelAction(
-//                        driveToFirstPickUp2,
-//                        grabberSuck
-//                )
-//        );
 
         viperSlide.resetEncoders();
+        hSlide.resetEncoder();
+
+        Actions.runBlocking(
+                new SequentialAction(
+                        //score +1
+                        new ParallelAction(
+                                viperAllTheWayUpAtTheTopToScoreASampleInHighBucket,
+                                bucketClose,
+                                bucketScore,
+                                hSlideForward,
+                                wristDown
+                                ),
+
+                        viperStop,
+                        bucketOpen,
+                        viperDownALittle,
+
+                        //pick up +2
+                        new ParallelAction(
+                                driveToPickUpSecond,
+                                viperToRest,
+                                bucketRest,
+                                grabberSuck
+                        ),
+
+                        //drive to score +2
+                        new ParallelAction(
+                                driveToScoreSecond,
+                                wristUp,
+                                hSlideBackward,
+                                grabberSpit
+                        )
+                )
+        );
+
+        viperSlide.resetEncoders();
+        hSlide.resetEncoder();
+
+        Actions.runBlocking(
+                new SequentialAction(
+                        //score +2
+                        new ParallelAction(
+                                viperAllTheWayUpAtTheTopToScoreASampleInHighBucket,
+                                bucketClose,
+                                bucketScore,
+                                hSlideForward,
+                                wristDown
+                                ),
+
+                        viperStop,
+                        bucketOpen,
+                        viperDownALittle,
+
+                        //pick up +3
+                        new ParallelAction(
+                                driveToPickUpThird,
+                                viperToRest,
+                                bucketRest,
+                                grabberSuckLonger
+                        ),
+
+                        //drive to score +3
+                        new ParallelAction(
+                                driveToScoreThird,
+                                wristUp,
+                                hSlideBackward,
+                                grabberSpit
+                        )
+                )
+        );
+
+        viperSlide.resetEncoders();
+        hSlide.resetEncoder();
+
+        Actions.runBlocking(
+                new SequentialAction(
+                        //score +3
+                        new ParallelAction(
+                                viperAllTheWayUpAtTheTopToScoreASampleInHighBucket,
+                                bucketClose,
+                                bucketScore
+                        ),
+
+                        viperStop,
+                        bucketOpen,
+                        viperDownALittle,
+
+                        //drive to ascent
+                        new ParallelAction(
+                                driveToHang1,
+                                viperToRest,
+                                bucketRest
+                        )
+                )
+        );
 
 
     }

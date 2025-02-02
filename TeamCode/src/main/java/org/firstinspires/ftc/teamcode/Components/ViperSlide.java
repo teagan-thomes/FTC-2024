@@ -99,9 +99,9 @@ public class ViperSlide{
 
 
         bucketRest();
-
-
         openBucket();
+
+        grabSpecimen();
     }
 
     public void setPower(double power) {
