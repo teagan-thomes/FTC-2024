@@ -3,7 +3,6 @@ package org.firstinspires.ftc.teamcode.Components;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.hardware.Servo;
-import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 
@@ -23,6 +22,9 @@ public class Intake {
 
     int maxFlipPosition = 525;
     int minFlipPosition = 0;
+
+    static String wristPosition = "up";
+
 
 
     public Intake(OpMode opMode, HorizontalSlide hSlide) {
@@ -53,16 +55,33 @@ public class Intake {
     ) {
         double wristIncrement = .015;
 
-        if((hSlide.getPos() < maxFlipPosition)) {
-            if (wristDown && (hSlide.getPos() > minFlipPosition) && !gamepad1.start) { // && !wristModifier
+        if(hSlide.getPos() > 0.3) {
+            if (wristDown && (hSlide.getPos() < .85) && !gamepad1.start) {
                 wristDown();
+                wristPosition = "down";
             }
-            else if (wristUp && !gamepad1.start) { // && !wristModifier
+
+            else if (wristUp && !gamepad1.start) {
                 wristUp();
+                wristPosition = "up";
             }
+
             else if (wristHalf) {
                 wristHalf();
+                wristPosition = "half";
             }
+        }
+        //TODO CHANGE THIS FOR AXON SERVOS
+//        if((hSlide.getPos() < maxFlipPosition)) {
+//            if (wristDown && (hSlide.getPos() > minFlipPosition) && !gamepad1.start) { // && !wristModifier
+//                wristDown();
+//            }
+//            else if (wristUp && !gamepad1.start) { // && !wristModifier
+//                wristUp();
+//            }
+//            else if (wristHalf) {
+//                wristHalf();
+//            }
 
 //            if(wristModifier && wristUp) {
 //                setWristPosition(leftWrist.getPosition() - wristIncrement, rightWrist.getPosition() + wristIncrement);
@@ -71,14 +90,13 @@ public class Intake {
 //            else if(wristModifier && wristDown) {
 //                setWristPosition(leftWrist.getPosition() + wristIncrement, rightWrist.getPosition() - wristIncrement);
 //            }
-
-            telemetry.addData("left wrist pos", leftWrist.getPosition());
-            telemetry.addData("right wrist pos",  rightWrist.getPosition());
-        }
-        else {
-            telemetry.addData("Wrist", "Cannot move wrist down, horizontal slide is too high");
-        }
-
+//
+//            telemetry.addData("left wrist pos", leftWrist.getPosition());
+//            telemetry.addData("right wrist pos",  rightWrist.getPosition());
+//        }
+//        else {
+//            telemetry.addData("Wrist", "Cannot move wrist down, horizontal slide is too high");
+//        }
 
         if (grabberSuck) {
             grabberSuck();
@@ -99,6 +117,10 @@ public class Intake {
     public void setGrabberPosition(double leftPosition, double rightPosition) {
         leftGrabber.setPosition(leftPosition);
         rightGrabber.setPosition(rightPosition);
+    }
+
+    public static String getWristPosition() {
+        return wristPosition;
     }
 
     public void wristDown() {

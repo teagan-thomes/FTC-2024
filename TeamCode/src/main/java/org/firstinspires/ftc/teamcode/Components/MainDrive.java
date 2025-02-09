@@ -44,9 +44,9 @@ public class MainDrive {
                             float x,
                             float rx,
                             boolean forwardButton,
-                            boolean reverseButton,
-                            float halfSpeedButton,
-                            float fourthSpeedButton
+                            boolean reverseButton
+//                            float halfSpeedButton,
+//                            float fourthSpeedButton
     ) {
         this.y = y;
         this.x = x;
@@ -61,16 +61,17 @@ public class MainDrive {
         }
 
         // Slow speeds
-        if (halfSpeedButton != 0) {
-            divideAmount = 2;
-        } else if (fourthSpeedButton != 0) {
-            divideAmount = 3;
-            //TODO used to be 4
-        } else {
-            divideAmount = 1;
-        }
+//        if (halfSpeedButton != 0) {
+//            divideAmount = 2;
+//        } else if (fourthSpeedButton != 0) {
+//            divideAmount = 3;
+//            //TODO used to be 4
+//        } else {
+//            divideAmount = 1;
+//        }
+        divideAmount = 1;
         checkSpeed();
-
+//
         updateMotors();
     }
 

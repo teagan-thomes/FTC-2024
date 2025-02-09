@@ -54,7 +54,6 @@ public class BlueLeft extends LinearOpMode {
         Intake intake = new Intake(this, hSlide);
         MainDrive mainDrive = new MainDrive(this);
 
-        hSlide.resetEncoder();
         viperSlide.resetEncoders();
 
         // RR-specific initialization
@@ -220,7 +219,6 @@ public class BlueLeft extends LinearOpMode {
         );
 
         viperSlide.resetEncoders();
-        hSlide.resetEncoder();
 
         Actions.runBlocking(
                 new SequentialAction(
@@ -256,7 +254,6 @@ public class BlueLeft extends LinearOpMode {
         );
 
         viperSlide.resetEncoders();
-        hSlide.resetEncoder();
 
         Actions.runBlocking(
                 new SequentialAction(
@@ -292,7 +289,6 @@ public class BlueLeft extends LinearOpMode {
         );
 
         viperSlide.resetEncoders();
-        hSlide.resetEncoder();
 
         Actions.runBlocking(
                 new SequentialAction(
