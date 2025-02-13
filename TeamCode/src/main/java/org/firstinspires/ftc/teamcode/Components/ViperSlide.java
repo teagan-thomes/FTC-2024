@@ -39,8 +39,8 @@ public class ViperSlide{
     private Telemetry telemetry;
     private HardwareMap hardwareMap;
 
-    double minFlipLimit = 650;
-    int autoFlipPosition = 3000;
+    double minFlipLimit = 300;
+    int autoFlipPosition = 2000;
     public double holdPower = .2;
     boolean wasScorePressed = false;
 

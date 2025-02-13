@@ -11,6 +11,7 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
+import com.qualcomm.robotcore.util.Range;
 
 import org.firstinspires.ftc.robotcore.external.navigation.CurrentUnit;
 
@@ -18,6 +19,7 @@ import java.util.Objects;
 
 public class HorizontalSlide {
     // private DcMotorEx slideMotor;
+    private Intake intake;
     private Servo leftLinkage;
     private Servo rightLinkage;
 
@@ -26,9 +28,9 @@ public class HorizontalSlide {
 
     private final HardwareMap hardwareMap;
     private final Telemetry telemetry;
-    double speed = 0.01;
+    double speed = 0.015;
     private ElapsedTime timer;
-    private static final double MOVE_BACK_DELAY_MS = 500; // 500ms delay
+    private static final double MOVE_BACK_DELAY_MS = 300; // 500ms delay
     private boolean isWaitingToMoveBack = false;
 
     // int maxSlidePosition = 650; // 675
@@ -47,11 +49,12 @@ public class HorizontalSlide {
         this.telemetry = opMode.telemetry;
         this.hardwareMap = opMode.hardwareMap;
         this.timer = new ElapsedTime();
+        this.intake = new Intake(opMode, this);
     }
 
     public void moveForward() {
-        leftLinkage.setPosition(0.34);
-        rightLinkage.setPosition(0.3);
+        leftLinkage.setPosition(0.32);
+        rightLinkage.setPosition(0.28);
     }
 
     public void moveBackward() {
@@ -60,26 +63,28 @@ public class HorizontalSlide {
     }
 
     public void moveForwardGradually() {
-        // leftLinkage.setPosition(Math.max(0.14, leftLinkage.getPosition() - speed));
-        // rightLinkage.setPosition(Math.max(0.1, rightLinkage.getPosition() - speed));
-        leftLinkage.setPosition(leftLinkage.getPosition() - speed);
-        rightLinkage.setPosition(rightLinkage.getPosition() - speed);
+        leftLinkage.setPosition(Range.clip((leftLinkage.getPosition() - speed), 0.11, 0.9));
+        rightLinkage.setPosition(Range.clip((rightLinkage.getPosition() - speed), 0.08, 0.94));
+//        leftLinkage.setPosition(leftLinkage.getPosition() - speed);
+//        rightLinkage.setPosition(rightLinkage.getPosition() - speed);
+
     }
 
     public void moveBackwardGradually() {
-        // leftLinkage.setPosition(Math.min(0.9, leftLinkage.getPosition() + speed));
-        // rightLinkage.setPosition(Math.min(0.94, rightLinkage.getPosition() + speed));
-        leftLinkage.setPosition(leftLinkage.getPosition() + speed);
-        rightLinkage.setPosition(rightLinkage.getPosition() + speed);
+        leftLinkage.setPosition(Range.clip((leftLinkage.getPosition() + speed), 0.11, 0.9));
+        rightLinkage.setPosition(Range.clip((rightLinkage.getPosition() + speed), 0.08, 0.94));
+//        leftLinkage.setPosition(leftLinkage.getPosition() + speed);
+//        rightLinkage.setPosition(rightLinkage.getPosition() + speed);
         ;
     }
 
-    public void checkInputs(boolean extend, boolean retract, double extendGradual, double retractGradual) {
-        if (extend) {
+    public void checkInputs(double extend, double retract, boolean extendGradual, boolean retractGradual) {
+        if (extend > 0.1) {
             moveForward();
             isWaitingToMoveBack = false;
-        } else if (retract && Objects.equals(Intake.getWristPosition(), "up")) {
+        } else if (retract > 0.1) {
             if (!isWaitingToMoveBack) {
+                intake.wristUp();
                 timer.reset();
                 isWaitingToMoveBack = true;
             }
@@ -90,11 +95,10 @@ public class HorizontalSlide {
             }
         } else {
             isWaitingToMoveBack = false;
-            // GRADUAL movement using triggers
-            if (extendGradual > 0.1) {
+            if (extendGradual) {
                 moveForwardGradually();
             }
-            if (retractGradual > 0.1) {
+            if (retractGradual) {
                 moveBackwardGradually();
             }
         }
