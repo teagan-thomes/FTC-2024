@@ -137,25 +137,24 @@ public class BlueLeft extends LinearOpMode {
                         baseAccelConstraint);
 
         //Actions
-        ViperToPositionAction viperAllTheWayUpAtTheTopToScoreASampleInHighBucket = new ViperToPositionAction(viperSlide, 4350);
-        ViperDownForTimeAction viperDownALittle = new ViperDownForTimeAction(viperSlide, 250);
+        ViperToPositionAction viperAllTheWayUpAtTheTopToScoreASampleInHighBucket = new ViperToPositionAction(viperSlide, 4250);
+        ViperDownForTimeAction viperDownALittle = new ViperDownForTimeAction(viperSlide, 300);
         ViperToRestAction viperToRest = new ViperToRestAction(viperSlide);
         ViperStopAction viperStop = new ViperStopAction(viperSlide);
 
         BucketFlapAction bucketOpen = new BucketFlapAction(viperSlide, "open", 800);
         BucketFlapAction bucketClose = new BucketFlapAction(viperSlide, "close");
-        BucketScoreAction bucketScore = new BucketScoreAction(viperSlide, 1500);
+        BucketScoreAction bucketScore = new BucketScoreAction(viperSlide, 1000);
         BucketRestAction bucketRest = new BucketRestAction(viperSlide, 500);
 
-        hSlideToPositionAction hSlideForward = new hSlideToPositionAction(hSlide, 300);
-        hSlideToPositionAction hSlideBackward = new hSlideToPositionAction(hSlide, -10);
+        hSlideToPositionAction hSlideForward = new hSlideToPositionAction(hSlide, .57,.53);
+        hSlideToPositionAction hSlideBackward = new hSlideToPositionAction(hSlide, .9,.94);
 
         WristDownAction wristDown = new WristDownAction(intake);
         WristUpAction wristUp = new WristUpAction(intake);
 
         GrabberSuckAction grabberSuck = new GrabberSuckAction(intake, 2000);
         GrabberSuckAction grabberSuckLonger = new GrabberSuckAction(intake, 2500);
-
         GrabberSpitAction grabberSpit = new GrabberSpitAction(intake, 2000, 1250);
 
 

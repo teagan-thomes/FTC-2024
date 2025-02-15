@@ -9,30 +9,18 @@ import org.firstinspires.ftc.teamcode.Components.HorizontalSlide;
 
 public class hSlideToPositionAction implements Action {
     private HorizontalSlide hSlide;
-    private int position;
+    private double leftPos;
+    private double rightPos;
 
-    public hSlideToPositionAction(HorizontalSlide hSlide, int position) {
+    public hSlideToPositionAction(HorizontalSlide hSlide, double leftPos, double rightPos) {
         this.hSlide = hSlide;
-        this.position = position;
+        this.leftPos = leftPos;
+        this.rightPos = rightPos;
     }
 
     @Override
     public boolean run(@NonNull TelemetryPacket telemetryPacket) {
-//        boolean inPositionRange = hSlide.getPos() >= (position - 25) && hSlide.getPos() <= (position + 25);
-
-//        if (!inPositionRange) {
-//            if (hSlide.getPos() < position) {
-//                hSlide.setPower(1);
-//            }
-//            else if (hSlide.getPos() > position) {
-//                hSlide.setPower(-1);
-//            }
-//        }
-//        else {
-//            hSlide.stopMotor();
-//        }
-
-//        return !inPositionRange;
+        hSlide.actionControl(leftPos, rightPos);
         return false;
     }
 }

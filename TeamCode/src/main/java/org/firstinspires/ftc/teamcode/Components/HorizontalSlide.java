@@ -52,6 +52,10 @@ public class HorizontalSlide {
         this.intake = new Intake(opMode, this);
     }
 
+    public void actionControl(double leftPos, double rightPos) {
+        leftLinkage.setPosition(leftPos);
+        rightLinkage.setPosition(rightPos);
+    }
     public void moveForward() {
         leftLinkage.setPosition(0.57); //.32 is ~flip limit
         rightLinkage.setPosition(0.53); //.28 is ~flip limit

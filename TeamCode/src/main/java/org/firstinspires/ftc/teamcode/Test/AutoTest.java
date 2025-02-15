@@ -38,8 +38,8 @@ public class AutoTest extends LinearOpMode {
         ViperDownForTimeAction viperDownForTime = new ViperDownForTimeAction(viperSlide, 1000);
         ViperStopAction viperStop = new ViperStopAction(viperSlide);
 
-        hSlideToPositionAction hSlideForward = new hSlideToPositionAction(hSlide, 500);
-        hSlideToPositionAction hSlideBackward = new hSlideToPositionAction(hSlide, 0);
+//        hSlideToPositionAction hSlideForward = new hSlideToPositionAction(hSlide, 500);
+//        hSlideToPositionAction hSlideBackward = new hSlideToPositionAction(hSlide, 0);
 
         GrabberSuckAction grabberSuck = new GrabberSuckAction(intake, 1000);
 

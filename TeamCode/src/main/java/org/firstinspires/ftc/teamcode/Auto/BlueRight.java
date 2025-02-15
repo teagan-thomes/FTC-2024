@@ -101,16 +101,13 @@ public class BlueRight extends LinearOpMode {
         TrajectoryActionBuilder traj2 = traj1.endTrajectory().fresh()
                 .strafeTo(new Vector2d(25.25, -26),
                         baseVelConstraint,
-                        baseAccelConstraint);
-        TrajectoryActionBuilder traj3 = traj2.endTrajectory().fresh()
+                        baseAccelConstraint)
                 .strafeTo(new Vector2d(49, -26),
                         fastVelConstraint,
-                        fastAccelConstraint);
-        TrajectoryActionBuilder traj4 = traj3.endTrajectory().fresh()
+                        fastAccelConstraint)
                 .strafeTo(new Vector2d(49, -36),
                         fastVelConstraint,
-                        fastAccelConstraint);
-        TrajectoryActionBuilder traj5 = traj4.endTrajectory().fresh()
+                        fastAccelConstraint)
                 .strafeTo(new Vector2d(7, -36),
                         fastVelConstraint,
                         fastAccelConstraint);
@@ -130,7 +127,7 @@ public class BlueRight extends LinearOpMode {
 //                        fastAccelConstraint);
 
         //spin
-        TrajectoryActionBuilder spin = traj4.endTrajectory().fresh()
+        TrajectoryActionBuilder spin = traj2.endTrajectory().fresh()
                 .strafeToLinearHeading(new Vector2d(15, -36), Math.toRadians(0),
                         baseVelConstraint,
                         baseAccelConstraint);
@@ -145,6 +142,9 @@ public class BlueRight extends LinearOpMode {
         //driveToScoreFirst
         TrajectoryActionBuilder traj10 = traj9.endTrajectory().fresh()
                 .strafeToLinearHeading(new Vector2d(25.75, 4), Math.toRadians(-180),
+                        scoreVelConstraint,
+                        scoreAccelConstraint)
+                .strafeToLinearHeading(new Vector2d(26.25, 4), Math.toRadians(-180),
                         scoreVelConstraint,
                         scoreAccelConstraint);
 
@@ -161,7 +161,10 @@ public class BlueRight extends LinearOpMode {
         //driveToScoreSecond
         //TODO 25.25
         TrajectoryActionBuilder traj12 = trajafter11.endTrajectory().fresh()
-                .strafeToLinearHeading(new Vector2d(26.25, 8), Math.toRadians(-180),
+                .strafeToLinearHeading(new Vector2d(26, 8), Math.toRadians(-180),
+                        scoreVelConstraint,
+                        scoreAccelConstraint)
+                .strafeToLinearHeading(new Vector2d(26.5, 8), Math.toRadians(-180),
                         scoreVelConstraint,
                         scoreAccelConstraint);
 
@@ -198,9 +201,9 @@ public class BlueRight extends LinearOpMode {
 
         Action driveToScorePre = traj1.build();
         Action driveToPushFirst1 = traj2.build();
-        Action driveToPushFirst2 = traj3.build();
-        Action driveToPushFirst3 = traj4.build();
-        Action driveToPushFirst4 = traj5.build();
+//        Action driveToPushFirst2 = traj3.build();
+//        Action driveToPushFirst3 = traj4.build();
+//        Action driveToPushFirst4 = traj5.build();
 //        Action driveToPushSecond1 = traj6.build();
 //        Action driveToPushSecond2 = traj7.build();
 //        Action driveToPushSecond3 = traj8.build();
@@ -249,9 +252,9 @@ public class BlueRight extends LinearOpMode {
 
         Actions.runBlocking(
                 new SequentialAction(
-                        driveToPushFirst2,
-                        driveToPushFirst3,
-                        driveToPushFirst4,
+//                        driveToPushFirst2,
+//                        driveToPushFirst3,
+//                        driveToPushFirst4,
 //                        driveToPushSecond1,
 //                        driveToPushSecond2,
 //                        driveToPushSecond3,

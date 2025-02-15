@@ -124,7 +124,7 @@ public class Intake {
     }
 
     public void wristDown() {
-        setWristPosition(.91, .32); // .95 and .375
+        setWristPosition(.91, .32); // .91 and .32
     }
 
     public void wristUp() {
