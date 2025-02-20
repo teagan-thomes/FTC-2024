@@ -91,8 +91,8 @@ public class BlueLeft extends LinearOpMode {
                         baseVelConstraint,
                         baseAccelConstraint)
                 .strafeToLinearHeading(new Vector2d(pickUpxPos2, 13), Math.toRadians(0),
-                        baseVelConstraint,
-                        baseAccelConstraint);
+                        slowVelConstraint,
+                        slowAccelConstraint);
 
         //driveToScoreFirst
         TrajectoryActionBuilder traj5 = traj3.endTrajectory().fresh()
@@ -102,12 +102,12 @@ public class BlueLeft extends LinearOpMode {
 
         //driveToPickUpSecond
         TrajectoryActionBuilder traj7 = traj5.endTrajectory().fresh()
-                .splineToLinearHeading(new Pose2d(pickUpxPos1, 23, Math.toRadians(0)), Math.toRadians(0),
+                .splineToLinearHeading(new Pose2d(pickUpxPos1, 24.5, Math.toRadians(0)), Math.toRadians(0),
                         baseVelConstraint,
                         baseAccelConstraint)
-                .strafeToLinearHeading(new Vector2d(pickUpxPos2, 23), Math.toRadians(0),
-                        baseVelConstraint,
-                        baseAccelConstraint);
+                .strafeToLinearHeading(new Vector2d(pickUpxPos2, 24.5), Math.toRadians(0),
+                        slowVelConstraint,
+                        slowAccelConstraint);
 
         //driveToScoreSecond
         TrajectoryActionBuilder traj8 = traj7.endTrajectory().fresh()
@@ -121,8 +121,8 @@ public class BlueLeft extends LinearOpMode {
                         baseVelConstraint,
                         baseAccelConstraint)
                 .strafeToLinearHeading(new Vector2d((pickUpxPos1 + 3 + 5), 22), Math.toRadians(42.5),
-                        baseVelConstraint,
-                        baseAccelConstraint);
+                        slowVelConstraint,
+                        slowAccelConstraint);
 
         //driveToScoreThird
         TrajectoryActionBuilder traj10 = traj9.endTrajectory().fresh()
@@ -153,9 +153,9 @@ public class BlueLeft extends LinearOpMode {
         WristDownAction wristDown = new WristDownAction(intake);
         WristUpAction wristUp = new WristUpAction(intake);
 
-        GrabberSuckAction grabberSuck = new GrabberSuckAction(intake, 2000);
-        GrabberSuckAction grabberSuckLonger = new GrabberSuckAction(intake, 2500);
-        GrabberSpitAction grabberSpit = new GrabberSpitAction(intake, 2000, 1250);
+        GrabberSuckAction grabberSuck = new GrabberSuckAction(intake, 2300);
+        GrabberSuckAction grabberSuckLonger = new GrabberSuckAction(intake, 3000);
+        GrabberSpitAction grabberSpit = new GrabberSpitAction(intake, 2000, 1000);
 
 
         // Between initialization and start

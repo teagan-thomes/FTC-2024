@@ -28,7 +28,7 @@ public class HorizontalSlide {
 
     private final HardwareMap hardwareMap;
     private final Telemetry telemetry;
-    double speed = 0.01;
+    double speed = 0.013;
     private ElapsedTime timer;
     private static final double MOVE_BACK_DELAY_MS = 300; // 500ms delay
     private boolean isWaitingToMoveBack = false;
