@@ -1,9 +1,11 @@
 package org.firstinspires.ftc.teamcode.Components;
 
+import com.qualcomm.hardware.dfrobot.HuskyLens;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.hardware.HardwareMap;
+import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 
@@ -12,6 +14,8 @@ public class MainDrive {
     public DcMotorEx backLeft;
     public DcMotorEx frontRight;
     public DcMotorEx backRight;
+    public Servo RGB;
+    public HuskyLens huskyLens;
 
     private final OpMode opMode;
     private final HardwareMap hardwareMap;
@@ -73,6 +77,7 @@ public class MainDrive {
         checkSpeed();
 //
         updateMotors();
+        updateLight();
     }
 
     void initMotors() {
@@ -95,6 +100,12 @@ public class MainDrive {
         backLeft.setDirection(DcMotorEx.Direction.REVERSE);
         frontRight.setDirection(DcMotorEx.Direction.FORWARD);
         backRight.setDirection(DcMotorEx.Direction.FORWARD);
+
+        RGB = hardwareMap.get(Servo.class, "light");
+        RGB.setPosition(0);
+
+        huskyLens = hardwareMap.get(HuskyLens.class, "huskyLens");
+        huskyLens.selectAlgorithm(HuskyLens.Algorithm.COLOR_RECOGNITION);
     }
 
     void setMotorDirections() {
@@ -125,4 +136,26 @@ public class MainDrive {
         frontRight.setPower(frontRightPower / divideAmount);
         backRight.setPower(backRightPower / divideAmount);
     }
+
+    void updateLight() {
+        HuskyLens.Block[] blocks = huskyLens.blocks();
+        if (blocks.length > 0) { // Ensure there is at least one block
+            HuskyLens.Block firstBlock = blocks[0]; // Get the first block
+            telemetry.addData("First Block", firstBlock.toString());
+
+            if (firstBlock.id == 1) {
+                RGB.setPosition(.279);
+            }
+            if (firstBlock.id == 2) {
+                RGB.setPosition(0.388);
+            }
+            if (firstBlock.id == 3) {
+                RGB.setPosition(.611);
+            }
+            else {
+                RGB.setPosition(0);
+            }
+        }
+    }
+
 }

@@ -40,7 +40,7 @@ public class ViperSlide{
     private HardwareMap hardwareMap;
 
     double minFlipLimit = 300;
-    int autoFlipPosition = 2000;
+    int autoFlipPosition = 2800;
     public double holdPower = .2;
     boolean wasScorePressed = false;
 
