@@ -62,7 +62,7 @@ public class BlueRight4Spec extends LinearOpMode {
 		viperSlide.resetEncoders();
 
 		// RR-specific initialization
-		Pose2d initialPose = new Pose2d(0, -63, Math.toRadians(180));
+		Pose2d initialPose = new Pose2d(0, 0, Math.toRadians(180));
 		MecanumDrive drive = new MecanumDrive(hardwareMap, initialPose);
 		drive.setProfile(MecanumDrive.DriveProfile.BASE);
 
@@ -88,26 +88,26 @@ public class BlueRight4Spec extends LinearOpMode {
 		// Trajectories
 		// driveToScorePre
 		TrajectoryActionBuilder traj1 = drive.actionBuilder(initialPose)
-				.strafeTo(new Vector2d(26, -63),
-						baseVelConstraint,
-						baseAccelConstraint)
-				.strafeTo(new Vector2d(27.5, -63),
+				.strafeTo(new Vector2d(26, 0),
+						scoreVelConstraint,
+						scoreAccelConstraint)
+				.strafeTo(new Vector2d(27.5, 0),
 						scoreVelConstraint,
 						scoreAccelConstraint);
 
 		// driveToGetFirst
 		TrajectoryActionBuilder traj2 = traj1.endTrajectory().fresh()
-				.splineTo(new Vector2d(15, -16), Math.toRadians(-45),
+				.splineTo(new Vector2d(15, -16), Math.toRadians(45),
 						baseVelConstraint,
 						baseAccelConstraint);
 
 		TrajectoryActionBuilder traj3 = traj2.endTrajectory().fresh()
-				.splineTo(new Vector2d(22, -23), Math.toRadians(-45),
+				.splineTo(new Vector2d(22, -23), Math.toRadians(45),
 						intakeVelConstraint,
 						intakeAccelConstraint);
 
 		TrajectoryActionBuilder traj4 = traj3.endTrajectory().fresh()
-				.splineTo(new Vector2d(15, -28), Math.toRadians(-135),
+				.splineTo(new Vector2d(15, -28), Math.toRadians(135),
 						baseVelConstraint,
 						baseAccelConstraint);
 
