@@ -45,249 +45,231 @@ import java.util.Arrays;
 
 @Autonomous(name = "BlueRight4Spec", group = "Auto")
 public class BlueRight4Spec extends LinearOpMode {
-        @Override
-        public void runOpMode() throws InterruptedException {
+	@Override
+	public void runOpMode() throws InterruptedException {
 
-                // todo when we add huskyLens
-                // Initializing huskyLens
-                int visionOutputPosition = 1;
+		// todo when we add huskyLens
+		// Initializing huskyLens
+		int visionOutputPosition = 1;
 
-                // Initializing our classes
-                HorizontalSlide hSlide = new HorizontalSlide(this, 3);
-                ViperSlide viperSlide = new ViperSlide(this);
-                Intake intake = new Intake(this, hSlide);
-                MainDrive mainDrive = new MainDrive(this);
+		// Initializing our classes
+		HorizontalSlide hSlide = new HorizontalSlide(this, 3);
+		ViperSlide viperSlide = new ViperSlide(this);
+		Intake intake = new Intake(this, hSlide);
+		MainDrive mainDrive = new MainDrive(this);
 
-                // hSlide.resetEncoder();
-                viperSlide.resetEncoders();
+		// hSlide.resetEncoder();
+		viperSlide.resetEncoders();
 
-                // RR-specific initialization
-                Pose2d initialPose = new Pose2d(12, -63, Math.toRadians(90));
-                MecanumDrive drive = new MecanumDrive(hardwareMap, initialPose);
-                // drive.setProfile(MecanumDrive.DriveProfile.BASE);
+		// RR-specific initialization
+		Pose2d initialPose = new Pose2d(0, -63, Math.toRadians(180));
+		MecanumDrive drive = new MecanumDrive(hardwareMap, initialPose);
+		drive.setProfile(MecanumDrive.DriveProfile.BASE);
 
-                // Set velocity and accel constraints
-                // normal
-                VelConstraint baseVelConstraint = new MinVelConstraint(Arrays.asList(
-                                new TranslationalVelConstraint(40),
-                                new AngularVelConstraint(Math.PI / 2)));
-                AccelConstraint baseAccelConstraint = new ProfileAccelConstraint(-25, 40);
+		// Set velocity and accel constraints
+		// normal
+		VelConstraint baseVelConstraint = new MinVelConstraint(Arrays.asList(
+				new TranslationalVelConstraint(40),
+				new AngularVelConstraint(Math.PI / 2)));
+		AccelConstraint baseAccelConstraint = new ProfileAccelConstraint(-25, 40);
 
-                // slow for scoring
-                VelConstraint scoreVelConstraint = new MinVelConstraint(Arrays.asList(
-                                new TranslationalVelConstraint(40),
-                                new AngularVelConstraint(Math.PI / 2)));
-                AccelConstraint scoreAccelConstraint = new ProfileAccelConstraint(-15, 25);
+		// slow for scoring
+		VelConstraint scoreVelConstraint = new MinVelConstraint(Arrays.asList(
+				new TranslationalVelConstraint(40),
+				new AngularVelConstraint(Math.PI / 2)));
+		AccelConstraint scoreAccelConstraint = new ProfileAccelConstraint(-15, 25);
 
-                // intake
-                VelConstraint intakeVelConstraint = new MinVelConstraint(Arrays.asList(
-                                new TranslationalVelConstraint(20),
-                                new AngularVelConstraint(Math.PI / 2)));
-                AccelConstraint intakeAccelConstraint = new ProfileAccelConstraint(-10, 20);
+		// intake
+		VelConstraint intakeVelConstraint = new MinVelConstraint(Arrays.asList(
+				new TranslationalVelConstraint(20),
+				new AngularVelConstraint(Math.PI / 2)));
+		AccelConstraint intakeAccelConstraint = new ProfileAccelConstraint(-10, 20);
 
-                // Trajectories
-                // driveToScorePre
-                TrajectoryActionBuilder traj1 = drive.actionBuilder(initialPose)
-                                .lineToLinearHeading(new Pose2d(26, -63, Math.toRadians(90)),
-                                                baseVelConstraint,
-                                                baseAccelConstraint)
-                                .lineToLinearHeading(new Pose2d(27.5, -63, Math.toRadians(90)),
-                                                scoreVelConstraint,
-                                                scoreAccelConstraint);
+		// Trajectories
+		// driveToScorePre
+		TrajectoryActionBuilder traj1 = drive.actionBuilder(initialPose)
+				.strafeTo(new Vector2d(26, -63),
+						baseVelConstraint,
+						baseAccelConstraint)
+				.strafeTo(new Vector2d(27.5, -63),
+						scoreVelConstraint,
+						scoreAccelConstraint);
 
-                // driveToGetFirst
-                TrajectoryActionBuilder traj2 = traj1.endTrajectory().fresh()
-                                .lineToLinearHeading(new Pose2d(15, -16, Math.toRadians(-45)),
-                                                baseVelConstraint,
-                                                baseAccelConstraint);
+		// driveToGetFirst
+		TrajectoryActionBuilder traj2 = traj1.endTrajectory().fresh()
+				.splineTo(new Vector2d(15, -16), Math.toRadians(-45),
+						baseVelConstraint,
+						baseAccelConstraint);
 
-                TrajectoryActionBuilder traj3 = traj2.endTrajectory().fresh()
-                                .lineToLinearHeading(new Pose2d(22, -23, Math.toRadians(-45)),
-                                                intakeVelConstraint,
-                                                intakeAccelConstraint);
+		TrajectoryActionBuilder traj3 = traj2.endTrajectory().fresh()
+				.splineTo(new Vector2d(22, -23), Math.toRadians(-45),
+						intakeVelConstraint,
+						intakeAccelConstraint);
 
-                TrajectoryActionBuilder traj4 = traj3.endTrajectory().fresh()
-                                .lineToLinearHeading(new Pose2d(15, -28, Math.toRadians(-135)),
-                                                baseVelConstraint,
-                                                baseAccelConstraint);
+		TrajectoryActionBuilder traj4 = traj3.endTrajectory().fresh()
+				.splineTo(new Vector2d(15, -28), Math.toRadians(-135),
+						baseVelConstraint,
+						baseAccelConstraint);
 
-                // driveToGetSecond
-                // TrajectoryActionBuilder WHYNOTWORK = traj4.endTrajectory().fresh()
-                // .strafeToLinearHeading(new Vector2d(15, -28), Math.toRadians(-45),
-                // baseVelConstraint,
-                // baseAccelConstraint);
-                TrajectoryActionBuilder testTraj = traj4.endTrajectory().fresh()
-                                .lineToLinearHeading(new Pose2d(15, -28, Math.toRadians(-45)),
-                                                baseVelConstraint,
-                                                baseAccelConstraint);
-                //
-                // TrajectoryActionBuilder traj6 = traj5.endTrajectory().fresh()
-                // .strafeToLinearHeading(new Vector2d(22, -35), Math.toRadians(-45),
-                // intakeVelConstraint,
-                // intakeAccelConstraint);
-                //
-                // TrajectoryActionBuilder traj7 = traj6.endTrajectory().fresh()
-                // .strafeToLinearHeading(new Vector2d(22, -35), Math.toRadians(-135),
-                // baseVelConstraint,
-                // baseAccelConstraint);
+		// driveToGetSecond
+		TrajectoryActionBuilder testTraj = traj4.endTrajectory().fresh()
+				.turn(Math.toRadians(90), drive.defaultTurnConstraints); // Turn from -135 to -45 degrees
 
-                // Actions
-                ViperToPositionAction viperSpecimen = new ViperToPositionAction(viperSlide, 2600);
-                ViperDownForTimeAction viperScore = new ViperDownForTimeAction(viperSlide, 500);
-                ViperToRestAction viperToRest = new ViperToRestAction(viperSlide);
-                ViperStopAction viperStop = new ViperStopAction(viperSlide);
+		// Actions
+		ViperToPositionAction viperSpecimen = new ViperToPositionAction(viperSlide, 2600);
+		ViperDownForTimeAction viperScore = new ViperDownForTimeAction(viperSlide, 500);
+		ViperToRestAction viperToRest = new ViperToRestAction(viperSlide);
+		ViperStopAction viperStop = new ViperStopAction(viperSlide);
 
-                BucketSpecimenAction bucketSpecimen = new BucketSpecimenAction(viperSlide, 1000);
-                BucketRestAction bucketRest = new BucketRestAction(viperSlide, 0);
+		BucketSpecimenAction bucketSpecimen = new BucketSpecimenAction(viperSlide, 1000);
+		BucketRestAction bucketRest = new BucketRestAction(viperSlide, 0);
 
-                hSlideToPositionAction hSlideForward = new hSlideToPositionAction(hSlide, .09, .06);
-                hSlideToPositionAction hSlideBackward = new hSlideToPositionAction(hSlide, .9, .94);
+		hSlideToPositionAction hSlideForward = new hSlideToPositionAction(hSlide, .09, .06);
+		hSlideToPositionAction hSlideBackward = new hSlideToPositionAction(hSlide, .9, .94);
 
-                WristDownAction wristDown = new WristDownAction(intake);
-                WristUpAction wristUp = new WristUpAction(intake);
+		WristDownAction wristDown = new WristDownAction(intake);
+		WristUpAction wristUp = new WristUpAction(intake);
 
-                GrabberSuckAction grabberSuck = new GrabberSuckAction(intake, 2000);
-                GrabberSuckAction grabberSuckLonger = new GrabberSuckAction(intake, 2500);
-                GrabberSpitAction grabberSpit = new GrabberSpitAction(intake, 1500, 750);
+		GrabberSuckAction grabberSuck = new GrabberSuckAction(intake, 2000);
+		GrabberSuckAction grabberSuckLonger = new GrabberSuckAction(intake, 2500);
+		GrabberSpitAction grabberSpit = new GrabberSpitAction(intake, 1500, 750);
 
-                SpecimenGrabberGrabAction specimenGrab = new SpecimenGrabberGrabAction(viperSlide, 0);
-                SpecimenGrabberReleaseAction specimenRelease = new SpecimenGrabberReleaseAction(viperSlide, 525);
+		SpecimenGrabberGrabAction specimenGrab = new SpecimenGrabberGrabAction(viperSlide, 0);
+		SpecimenGrabberReleaseAction specimenRelease = new SpecimenGrabberReleaseAction(viperSlide, 525);
 
-                // Between initialization and start
-                while (!isStopRequested() && !opModeIsActive()) {
-                        int position = visionOutputPosition;
-                        telemetry.addData("Position during Init", position);
-                        telemetry.update();
-                }
+		// Between initialization and start
+		while (!isStopRequested() && !opModeIsActive()) {
+			int position = visionOutputPosition;
+			telemetry.addData("Position during Init", position);
+			telemetry.addData("Initial Pose", "x: %.2f, y: %.2f, heading: %.2f",
+					initialPose.position.x, initialPose.position.y,
+					Math.toDegrees(initialPose.heading.toDouble()));
+			telemetry.update();
+		}
 
-                waitForStart();
+		waitForStart();
 
-                if (isStopRequested() || gamepad1.b)
-                        return;
+		if (isStopRequested() || gamepad1.b)
+			return;
 
-                Action driveToScorePre = traj1.build();
-                Action driveToGetFirst1 = traj2.build();
-                Action driveToGetFirst2 = traj3.build();
-                Action driveToGetFirst3 = traj4.build();
+		Action driveToScorePre = traj1.build();
+		Action driveToGetFirst1 = traj2.build();
+		Action driveToGetFirst2 = traj3.build();
+		Action driveToGetFirst3 = traj4.build();
+		Action testAction = testTraj.build();
 
-                Action testAction = testTraj.build();
+		// Start
+		telemetry.addData("Status", "Running");
+		telemetry.addData("Current Pose", "x: %.2f, y: %.2f, heading: %.2f",
+				drive.pose.position.x, drive.pose.position.y,
+				Math.toDegrees(drive.pose.heading.toDouble()));
+		telemetry.update();
 
-                // Start
-                telemetry.addData("Status", "Running");
-                telemetry.update();
+		// score pre
+		telemetry.addData("Executing", "Score Pre");
+		telemetry.update();
+		Actions.runBlocking(
+				new SequentialAction(
+						new ParallelAction(
+								driveToScorePre,
+								viperSpecimen,
+								bucketSpecimen),
+						new ParallelAction(
+								viperScore,
+								specimenRelease),
+						new ParallelAction(
+								driveToGetFirst1,
+								viperToRest,
+								bucketRest,
+								hSlideForward,
+								wristDown),
+						new ParallelAction(
+								driveToGetFirst2,
+								grabberSuck),
+						new ParallelAction(
+								driveToGetFirst3,
+								grabberSpit)));
 
-                // score pre
-                Actions.runBlocking(
-                                new SequentialAction(
-                                                new ParallelAction(
-                                                                driveToScorePre,
-                                                                viperSpecimen,
-                                                                bucketSpecimen),
-                                                new ParallelAction(
-                                                                viperScore,
-                                                                specimenRelease),
-                                                new ParallelAction(
-                                                                driveToGetFirst1,
-                                                                viperToRest,
-                                                                bucketRest,
-                                                                hSlideForward,
-                                                                wristDown),
-                                                new ParallelAction(
-                                                                driveToGetFirst2,
-                                                                grabberSuck),
-                                                new ParallelAction(
-                                                                driveToGetFirst3,
-                                                                grabberSpit),
+		telemetry.addData("Final Pose", "x: %.2f, y: %.2f, heading: %.2f",
+				drive.pose.position.x, drive.pose.position.y,
+				Math.toDegrees(drive.pose.heading.toDouble()));
+		telemetry.update();
 
-                                                testAction
+		// viperSlide.resetEncoders();
+		//
+		// Actions.runBlocking(
+		// new SequentialAction(
+		//// driveToPushFirst2,
+		//// driveToPushFirst3,
+		//// driveToPushFirst4,
+		//// driveToPushSecond1,
+		//// driveToPushSecond2,
+		//// driveToPushSecond3,
+		// spinAction,
+		// driveToPickUpFirst
+		// )
+		// );
 
-                                // driveToGetSecond1,
+		// viperSlide.grabSpecimen(); //TODO grabSpecimen action doesn't work
+		// sleep(500);
 
-                                // new ParallelAction(
-                                //// driveToGetSecond2,
-                                // grabberSuck
-                                // ),
-                                // new ParallelAction(
-                                //// driveToGetSecond3,
-                                // grabberSpit
-                                // )
-                                ));
+		// score first
+		// Actions.runBlocking(
+		// new ParallelAction(
+		// driveToScoreFirst,
+		// viperSpecimen,
+		// bucketSpecimen
+		// )
+		// );
+		// Actions.runBlocking(
+		// new ParallelAction(
+		// viperScore,
+		// specimenRelease
+		// )
+		// );
+		//
+		// // pick up second
+		// Actions.runBlocking(
+		// new ParallelAction(
+		// driveToPickUpSecond,
+		// viperToRest,
+		// bucketRest
+		// )
+		// );
+		//
+		// viperSlide.resetEncoders();
+		//
+		// Actions.runBlocking(driveToPickUpSecond2);
+		//
+		// viperSlide.grabSpecimen(); //TODO grabSpecimen action doesn't work
+		// sleep(500);
+		//
+		// // score second
+		// Actions.runBlocking(
+		// new ParallelAction(
+		// driveToScoreSecond,
+		// viperSpecimen,
+		// bucketSpecimen
+		// )
+		// );
+		// Actions.runBlocking(
+		// new ParallelAction(
+		// viperScore,
+		// specimenRelease
+		// )
+		// );
+		//
+		// //park
+		// Actions.runBlocking(
+		// new ParallelAction(
+		// park,
+		// viperToRest,
+		// bucketRest
+		// )
+		// );
+		//
+		// viperSlide.resetEncoders();
 
-                // viperSlide.resetEncoders();
-                //
-                // Actions.runBlocking(
-                // new SequentialAction(
-                //// driveToPushFirst2,
-                //// driveToPushFirst3,
-                //// driveToPushFirst4,
-                //// driveToPushSecond1,
-                //// driveToPushSecond2,
-                //// driveToPushSecond3,
-                // spinAction,
-                // driveToPickUpFirst
-                // )
-                // );
-
-                // viperSlide.grabSpecimen(); //TODO grabSpecimen action doesn't work
-                // sleep(500);
-
-                // score first
-                // Actions.runBlocking(
-                // new ParallelAction(
-                // driveToScoreFirst,
-                // viperSpecimen,
-                // bucketSpecimen
-                // )
-                // );
-                // Actions.runBlocking(
-                // new ParallelAction(
-                // viperScore,
-                // specimenRelease
-                // )
-                // );
-                //
-                // // pick up second
-                // Actions.runBlocking(
-                // new ParallelAction(
-                // driveToPickUpSecond,
-                // viperToRest,
-                // bucketRest
-                // )
-                // );
-                //
-                // viperSlide.resetEncoders();
-                //
-                // Actions.runBlocking(driveToPickUpSecond2);
-                //
-                // viperSlide.grabSpecimen(); //TODO grabSpecimen action doesn't work
-                // sleep(500);
-                //
-                // // score second
-                // Actions.runBlocking(
-                // new ParallelAction(
-                // driveToScoreSecond,
-                // viperSpecimen,
-                // bucketSpecimen
-                // )
-                // );
-                // Actions.runBlocking(
-                // new ParallelAction(
-                // viperScore,
-                // specimenRelease
-                // )
-                // );
-                //
-                // //park
-                // Actions.runBlocking(
-                // new ParallelAction(
-                // park,
-                // viperToRest,
-                // bucketRest
-                // )
-                // );
-                //
-                // viperSlide.resetEncoders();
-
-        }
+	}
 
 }
