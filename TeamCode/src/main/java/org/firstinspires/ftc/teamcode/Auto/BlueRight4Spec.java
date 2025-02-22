@@ -110,12 +110,12 @@ public class BlueRight4Spec extends LinearOpMode {
 
 		// driveToGetSecond
 		TrajectoryActionBuilder traj5 = traj4.endTrajectory().fresh()
-				.strafeToLinearHeading(new Vector2d(15, -29), Math.toRadians(-45),
+				.strafeToLinearHeading(new Vector2d(15, -28.5), Math.toRadians(-45),
 						baseVelConstraint,
 						baseAccelConstraint);
 
 		TrajectoryActionBuilder traj6 = traj5.endTrajectory().fresh()
-				.strafeToLinearHeading(new Vector2d(24, -38), Math.toRadians(-45),
+				.strafeToLinearHeading(new Vector2d(25, -38.5), Math.toRadians(-45),
 						intakeVelConstraint,
 						intakeAccelConstraint);
 
@@ -243,14 +243,8 @@ public class BlueRight4Spec extends LinearOpMode {
 								viperToRest,
 								bucketRest,
 								hSlideForwardLess,
-								wristDown)
-				)
-		);
+								wristDown),
 
-		viperSlide.resetEncoders();
-
-		Actions.runBlocking(
-				new SequentialAction(
 						new ParallelAction(
 								driveToGetFirst2,
 								hSlideForward,
@@ -279,8 +273,15 @@ public class BlueRight4Spec extends LinearOpMode {
 								driveToScoreFirst1,
 								wristUp,
 								specimenGrab
-						),
+						)
+				)
+		);
 
+		viperSlide.resetEncoders();
+		sleep(50);
+
+		Actions.runBlocking(
+				new SequentialAction(
 						new ParallelAction(
 								driveToScoreFirst2,
 								hSlideBackward,
@@ -303,6 +304,7 @@ public class BlueRight4Spec extends LinearOpMode {
 		);
 
 		viperSlide.resetEncoders();
+		sleep(50);
 
 		Actions.runBlocking(
 				new SequentialAction(
@@ -326,6 +328,7 @@ public class BlueRight4Spec extends LinearOpMode {
 		);
 
 		viperSlide.resetEncoders();
+		sleep(50);
 
 		Actions.runBlocking(
 				new SequentialAction(
