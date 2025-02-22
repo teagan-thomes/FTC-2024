@@ -29,6 +29,8 @@ public class MainDrive {
 
     double direction = 1;
 
+    public boolean slowSpeed = false;
+
     float y;
     float x;
     float rx;
@@ -44,13 +46,14 @@ public class MainDrive {
         initMotors();
     }
 
-    public void checkInputs(float y,
-                            float x,
-                            float rx,
-                            boolean forwardButton,
-                            boolean reverseButton
-//                            float halfSpeedButton,
-//                            float fourthSpeedButton
+    public void checkInputs(
+            float y,
+            float x,
+            float rx,
+            boolean forwardButton,
+            boolean reverseButton
+    // float halfSpeedButton,
+    // float fourthSpeedButton
     ) {
         this.y = y;
         this.x = x;
@@ -65,17 +68,21 @@ public class MainDrive {
         }
 
         // Slow speeds
-//        if (halfSpeedButton != 0) {
-//            divideAmount = 2;
-//        } else if (fourthSpeedButton != 0) {
-//            divideAmount = 3;
-//            //TODO used to be 4
-//        } else {
-//            divideAmount = 1;
-//        }
-        divideAmount = 1;
+        // if (halfSpeedButton != 0) {
+        // divideAmount = 2;
+        // } else if (fourthSpeedButton != 0) {
+        // divideAmount = 3;
+        // //TODO used to be 4
+        // } else {
+        // divideAmount = 1;
+        // }
+
+        if(slowSpeed)
+            divideAmount = 2;
+        else
+            divideAmount = 1;
         checkSpeed();
-//
+        //
         updateMotors();
         updateLight();
     }
@@ -151,8 +158,7 @@ public class MainDrive {
             }
             if (firstBlock.id == 3) {
                 RGB.setPosition(.611);
-            }
-            else {
+            } else {
                 RGB.setPosition(0);
             }
         }
