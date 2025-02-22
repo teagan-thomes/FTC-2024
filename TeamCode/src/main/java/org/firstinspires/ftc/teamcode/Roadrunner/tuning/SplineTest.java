@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode.Roadrunner.tuning;
 import com.acmerobotics.roadrunner.Pose2d;
 import com.acmerobotics.roadrunner.Vector2d;
 import com.acmerobotics.roadrunner.ftc.Actions;
+import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
@@ -10,6 +11,7 @@ import org.firstinspires.ftc.teamcode.Roadrunner.MecanumDrive;
 import org.firstinspires.ftc.teamcode.Roadrunner.TankDrive;
 
 @Disabled
+@Autonomous(name = "SplineTest", group = "9Roadrunner")
 public final class SplineTest extends LinearOpMode {
     @Override
     public void runOpMode() throws InterruptedException {
