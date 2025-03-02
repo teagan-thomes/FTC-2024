@@ -11,7 +11,7 @@ import org.firstinspires.ftc.teamcode.Components.MainDrive;
 import org.firstinspires.ftc.teamcode.Components.ViperSlide;
 import org.firstinspires.ftc.teamcode.Debug.Debug;
 
-@TeleOp(name = "TeleOpDemo", group = "Demo")
+@TeleOp(name = "TeleOpDemo", group = "Test")
 public class TeleOpDemo extends LinearOpMode {
 
     public DcMotorEx frontLeft;
@@ -45,10 +45,10 @@ public class TeleOpDemo extends LinearOpMode {
     @Override
     public void runOpMode() {
         // define part objects
-        HorizontalSlide hSlide = new HorizontalSlide(this, 3);
         ViperSlide viperSlide = new ViperSlide(this);
-        Intake intake = new Intake(this, hSlide);
         MainDrive mainDrive = new MainDrive(this);
+        HorizontalSlide hSlide = new HorizontalSlide(this, 3, mainDrive);
+        Intake intake = new Intake(this, hSlide, mainDrive);
 
         Debug debug = new Debug(this);
 
@@ -58,6 +58,8 @@ public class TeleOpDemo extends LinearOpMode {
 
         telemetry.addData("Status", "Initialized");
         telemetry.update();
+
+        boolean unboundButton = (gamepad1.dpad_left && gamepad1.dpad_up);
 
         waitForStart();
 
@@ -96,11 +98,10 @@ public class TeleOpDemo extends LinearOpMode {
                     gamepad2.b, // open bucket
                     gamepad2.a, // close bucket
                     // gamepad2.b, // open/close bucket
-                    gamepad2.dpad_down, // grab specimen
-                    gamepad2.dpad_up, // release specimen
-                    gamepad2.dpad_left, // bucket specimen
-                    gamepad2.dpad_right
-            // gamepad2.back // score specimen
+                    unboundButton, // grab specimen
+                    unboundButton, // release specimen
+                    unboundButton, // bucket specimen
+                    unboundButton // bucketSpecimenRest
             );
 
             hSlide.checkInputs(

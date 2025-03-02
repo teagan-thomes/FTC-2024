@@ -1,7 +1,9 @@
 package org.firstinspires.ftc.teamcode.Components;
 
+import com.qualcomm.hardware.dfrobot.HuskyLens;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.Gamepad;
+import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
@@ -14,7 +16,11 @@ public class Intake {
 
     private HorizontalSlide hSlide;
 
+    public Servo RGB;
+    public HuskyLens huskyLens;
+
     private OpMode opMode;
+    private HardwareMap hardwareMap;
     private Telemetry telemetry;
     private Gamepad gamepad1;
     private Gamepad gamepad2;
@@ -27,9 +33,10 @@ public class Intake {
 
 
 
-    public Intake(OpMode opMode, HorizontalSlide hSlide) {
+    public Intake(OpMode opMode, HorizontalSlide hSlide, MainDrive mainDrive) {
         this.opMode = opMode;
         this.telemetry = opMode.telemetry;
+        this.hardwareMap = opMode.hardwareMap;
         this.gamepad1 = opMode.gamepad1;
         this.gamepad2 = opMode.gamepad2;
 
@@ -43,6 +50,12 @@ public class Intake {
         rightWrist.setPosition(1);
         leftGrabber.setPosition(0.5);
         rightGrabber.setPosition(0.5);
+
+        RGB = this.hardwareMap.get(Servo.class, "light");
+        RGB.setPosition(0);
+
+        huskyLens = this.hardwareMap.get(HuskyLens.class, "huskyLens");
+        huskyLens.selectAlgorithm(HuskyLens.Algorithm.COLOR_RECOGNITION);
     }
 
     public void checkInputs(
@@ -106,6 +119,8 @@ public class Intake {
             grabberOff();
         }
 
+        updateLight();
+
     }
 
     // SERVO CONTROLLER INFO: leftWrist:        left limit = 1, right limit = 0     rightWrist: left limit = 0, right limit = 1
@@ -146,4 +161,59 @@ public class Intake {
     public void grabberOff() {
         setGrabberPosition(0.5, 0.5);
     }
+
+    // Add a confidence counter
+    int confidenceCounter = 0;
+    int lastDetectedId = -1;
+
+    void updateLight() {
+        HuskyLens.Block[] blocks = huskyLens.blocks();
+
+        if (blocks.length > 0) {
+            HuskyLens.Block largestBlock = blocks[0];
+
+            for (HuskyLens.Block block : blocks) {
+                int currentArea = block.width * block.height;
+                int largestArea = largestBlock.width * largestBlock.height;
+
+                if (currentArea > largestArea) {
+                    largestBlock = block;
+                }
+            }
+
+            int detectedId = largestBlock.id;
+
+
+
+            // Ignore ID 4
+                // Increase confidence counter if the same ID is detected multiple times
+            if (detectedId == lastDetectedId) {
+                confidenceCounter++;
+            } else {
+                confidenceCounter = 0;  // Reset if ID changes
+            }
+
+            lastDetectedId = detectedId;
+
+            if (confidenceCounter > 10) {
+                if (detectedId == 1) {
+                    RGB.setPosition(0.279);
+                } else if (detectedId == 2) {
+                    RGB.setPosition(0.388);
+                } else if (detectedId == 3) {
+                    RGB.setPosition(0.611);
+                } else if (detectedId == 4) {
+                    RGB.setPosition(0);
+                } else {
+                    RGB.setPosition(0);
+                }
+            }
+        } else {
+            RGB.setPosition(0);
+        }
+
+        telemetry.update();
+    }
+
+
 }

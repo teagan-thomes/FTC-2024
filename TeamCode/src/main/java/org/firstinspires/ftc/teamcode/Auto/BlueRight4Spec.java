@@ -53,10 +53,10 @@ public class BlueRight4Spec extends LinearOpMode {
 		int visionOutputPosition = 1;
 
 		// Initializing our classes
-		HorizontalSlide hSlide = new HorizontalSlide(this, 3);
 		ViperSlide viperSlide = new ViperSlide(this);
-		Intake intake = new Intake(this, hSlide);
 		MainDrive mainDrive = new MainDrive(this);
+		HorizontalSlide hSlide = new HorizontalSlide(this, 3, mainDrive);
+		Intake intake = new Intake(this, hSlide, mainDrive);
 
 		// hSlide.resetEncoder();
 		viperSlide.resetEncoders();

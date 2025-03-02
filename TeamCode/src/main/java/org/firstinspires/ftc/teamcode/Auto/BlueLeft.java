@@ -49,10 +49,10 @@ public class BlueLeft extends LinearOpMode {
         int visionOutputPosition = 1;
 
         // Initializing our classes
-        HorizontalSlide hSlide = new HorizontalSlide(this, 3);
         ViperSlide viperSlide = new ViperSlide(this);
-        Intake intake = new Intake(this, hSlide);
         MainDrive mainDrive = new MainDrive(this);
+        HorizontalSlide hSlide = new HorizontalSlide(this, 3, mainDrive);
+        Intake intake = new Intake(this, hSlide, mainDrive);
 
         viperSlide.resetEncoders();
 
@@ -74,10 +74,10 @@ public class BlueLeft extends LinearOpMode {
         ));
         AccelConstraint slowAccelConstraint = new ProfileAccelConstraint(-10, 20);
 
-        double scorexPos = 10.3; //10.8
-        double scoreyPos = 17;
-        double pickUpxPos1 = 14.5;
-        double pickUpxPos2 = 18;
+        double scorexPos = 10.1; //10.3
+        double scoreyPos = 16.8;   //17
+        double pickUpxPos1 = 14.5; //14.5
+        double pickUpxPos2 = 19; //18
 
         //driveToScorePre
         TrajectoryActionBuilder traj2 = drive.actionBuilder(initialPose)

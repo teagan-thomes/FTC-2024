@@ -37,7 +37,7 @@ public class HorizontalSlide {
     // private final Gamepad gamepad1;
     // private final Gamepad gamepad2;
 
-    public HorizontalSlide(OpMode opMode, double currentLimit) {
+    public HorizontalSlide(OpMode opMode, double currentLimit, MainDrive mainDrive) {
         // slideMotor = opMode.hardwareMap.get(DcMotorEx.class, "slideMotor");
         // slideMotor.setDirection(DcMotorEx.Direction.REVERSE);
 
@@ -49,7 +49,7 @@ public class HorizontalSlide {
         this.telemetry = opMode.telemetry;
         this.hardwareMap = opMode.hardwareMap;
         this.timer = new ElapsedTime();
-        this.intake = new Intake(opMode, this);
+        this.intake = new Intake(opMode, this, mainDrive);
     }
 
     public void actionControl(double leftPos, double rightPos) {

@@ -9,6 +9,7 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 import org.firstinspires.ftc.teamcode.Components.HorizontalSlide;
 import org.firstinspires.ftc.teamcode.Components.Intake;
+import org.firstinspires.ftc.teamcode.Components.MainDrive;
 import org.firstinspires.ftc.teamcode.Components.ViperSlide;
 import org.firstinspires.ftc.teamcode.Roadrunner.Actions.bucket.BucketFlapAction;
 import org.firstinspires.ftc.teamcode.Roadrunner.Actions.bucket.BucketRestAction;
@@ -28,8 +29,9 @@ public class AutoTest extends LinearOpMode {
     @Override
     public void runOpMode() {
         ViperSlide viperSlide = new ViperSlide(this);
-        HorizontalSlide hSlide = new HorizontalSlide(this, 3);
-        Intake intake = new Intake(this, hSlide);
+        MainDrive mainDrive = new MainDrive(this);
+        HorizontalSlide hSlide = new HorizontalSlide(this, 3, mainDrive);
+        Intake intake = new Intake(this, hSlide, mainDrive);
 
         ViperToPositionAction viperUp = new ViperToPositionAction(viperSlide, 3000);
         ViperToPositionAction viperAllTheWayUpAtTheTopToScoreASampleInHighBucket = new ViperToPositionAction(viperSlide, 4250);

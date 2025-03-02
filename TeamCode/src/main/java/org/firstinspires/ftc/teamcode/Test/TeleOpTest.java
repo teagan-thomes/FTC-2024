@@ -36,9 +36,10 @@ public class TeleOpTest extends LinearOpMode {
     @Override
     public void runOpMode() {
         // Initialize motors
-        HorizontalSlide hSlide = new HorizontalSlide(this, 3);
+        MainDrive mainDrive = new MainDrive(this);
+        HorizontalSlide hSlide = new HorizontalSlide(this, 3, mainDrive);
         ViperSlide viperSlide = new ViperSlide(this);
-        DriveAcceleration mainDrive = new DriveAcceleration(this);
+        DriveAcceleration driveAccel = new DriveAcceleration(this);
 
 
         debug = new Debug(this);

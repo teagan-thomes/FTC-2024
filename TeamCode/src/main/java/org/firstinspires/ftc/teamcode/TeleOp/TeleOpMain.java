@@ -11,7 +11,7 @@ import org.firstinspires.ftc.teamcode.Components.MainDrive;
 import org.firstinspires.ftc.teamcode.Components.ViperSlide;
 import org.firstinspires.ftc.teamcode.Debug.Debug;
 
-@TeleOp(name = "TeleOpMain", group = "Main")
+@TeleOp(name = "TeleOpMain", group = "1Main")
 public class TeleOpMain extends LinearOpMode {
 
     public DcMotorEx frontLeft;
@@ -45,10 +45,10 @@ public class TeleOpMain extends LinearOpMode {
     @Override
     public void runOpMode() {
         // define part objects
-        HorizontalSlide hSlide = new HorizontalSlide(this, 3);
         ViperSlide viperSlide = new ViperSlide(this);
-        Intake intake = new Intake(this, hSlide);
         MainDrive mainDrive = new MainDrive(this);
+        HorizontalSlide hSlide = new HorizontalSlide(this, 3, mainDrive);
+        Intake intake = new Intake(this, hSlide, mainDrive);
 
         Debug debug = new Debug(this);
 

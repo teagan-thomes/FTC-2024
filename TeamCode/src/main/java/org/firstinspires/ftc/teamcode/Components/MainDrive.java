@@ -14,8 +14,7 @@ public class MainDrive {
     public DcMotorEx backLeft;
     public DcMotorEx frontRight;
     public DcMotorEx backRight;
-    public Servo RGB;
-    public HuskyLens huskyLens;
+
 
     private final OpMode opMode;
     private final HardwareMap hardwareMap;
@@ -72,7 +71,7 @@ public class MainDrive {
         // divideAmount = 2;
         // } else if (fourthSpeedButton != 0) {
         // divideAmount = 3;
-        // //TODO used to be 4
+        // //used to be 4
         // } else {
         // divideAmount = 1;
         // }
@@ -84,7 +83,6 @@ public class MainDrive {
         checkSpeed();
         //
         updateMotors();
-        updateLight();
     }
 
     void initMotors() {
@@ -107,12 +105,6 @@ public class MainDrive {
         backLeft.setDirection(DcMotorEx.Direction.REVERSE);
         frontRight.setDirection(DcMotorEx.Direction.FORWARD);
         backRight.setDirection(DcMotorEx.Direction.FORWARD);
-
-        RGB = hardwareMap.get(Servo.class, "light");
-        RGB.setPosition(0);
-
-        huskyLens = hardwareMap.get(HuskyLens.class, "huskyLens");
-        huskyLens.selectAlgorithm(HuskyLens.Algorithm.COLOR_RECOGNITION);
     }
 
     void setMotorDirections() {
@@ -144,24 +136,6 @@ public class MainDrive {
         backRight.setPower(backRightPower / divideAmount);
     }
 
-    void updateLight() {
-        HuskyLens.Block[] blocks = huskyLens.blocks();
-        if (blocks.length > 0) { // Ensure there is at least one block
-            HuskyLens.Block firstBlock = blocks[0]; // Get the first block
-            telemetry.addData("First Block", firstBlock.toString());
 
-            if (firstBlock.id == 1) {
-                RGB.setPosition(.279);
-            }
-            if (firstBlock.id == 2) {
-                RGB.setPosition(0.388);
-            }
-            if (firstBlock.id == 3) {
-                RGB.setPosition(.611);
-            } else {
-                RGB.setPosition(0);
-            }
-        }
-    }
 
 }
