@@ -126,7 +126,7 @@ public class BlueRight4Spec extends LinearOpMode {
 
 		// driveToScoreFirst
 		TrajectoryActionBuilder traj8 = traj7.endTrajectory().fresh()
-				.strafeToLinearHeading(new Vector2d(0, -28), Math.toRadians(0),
+				.strafeToLinearHeading(new Vector2d(-0.5, -28), Math.toRadians(0),
 						baseVelConstraint,
 						baseAccelConstraint);
 
@@ -137,7 +137,7 @@ public class BlueRight4Spec extends LinearOpMode {
 
 		// driveToScoreSecond
 		TrajectoryActionBuilder traj10 = traj9.endTrajectory().fresh()
-				.strafeToLinearHeading(new Vector2d(0, -28), Math.toRadians(0),
+				.strafeToLinearHeading(new Vector2d(-0.5, -28), Math.toRadians(0),
 						baseVelConstraint,
 						baseAccelConstraint);
 

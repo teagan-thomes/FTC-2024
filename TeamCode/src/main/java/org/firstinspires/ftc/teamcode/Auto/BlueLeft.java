@@ -77,7 +77,7 @@ public class BlueLeft extends LinearOpMode {
         double scorexPos = 10.1; //10.3
         double scoreyPos = 16.8;   //17
         double pickUpxPos1 = 14.5; //14.5
-        double pickUpxPos2 = 19; //18
+        double pickUpxPos2 = 19.5; //18, 19
 
         //driveToScorePre
         TrajectoryActionBuilder traj2 = drive.actionBuilder(initialPose)
@@ -120,7 +120,7 @@ public class BlueLeft extends LinearOpMode {
                 .splineToLinearHeading(new Pose2d((pickUpxPos1 + 3), 16, Math.toRadians(42.5)), Math.toRadians(0),
                         baseVelConstraint,
                         baseAccelConstraint)
-                .strafeToLinearHeading(new Vector2d((pickUpxPos1 + 3 + 5), 22), Math.toRadians(42.5),
+                .strafeToLinearHeading(new Vector2d((pickUpxPos1 + 3 + 4.5), 22), Math.toRadians(42.5),
                         slowVelConstraint,
                         slowAccelConstraint);
 

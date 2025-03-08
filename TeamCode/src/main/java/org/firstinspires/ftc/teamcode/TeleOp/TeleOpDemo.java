@@ -83,7 +83,8 @@ public class TeleOpDemo extends LinearOpMode {
                     gamepad1.left_stick_x, // x
                     gamepad1.right_stick_x, // rx
                     gamepad1.y, // forward
-                    gamepad1.b // reverse
+                    gamepad1.b, // reverse
+                    gamepad1.left_bumper
             // gamepad1.left_trigger, // 1/2 speed
             // gamepad1.right_trigger // 1/4 speed
             );

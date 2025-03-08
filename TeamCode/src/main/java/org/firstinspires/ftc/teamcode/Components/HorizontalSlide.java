@@ -57,8 +57,8 @@ public class HorizontalSlide {
         rightLinkage.setPosition(rightPos);
     }
     public void moveForward() {
-        leftLinkage.setPosition(0.57); //.32 is ~flip limit
-        rightLinkage.setPosition(0.53); //.28 is ~flip limit
+        leftLinkage.setPosition(0.60); //.32 is ~flip limit, 0.57
+        rightLinkage.setPosition(0.56); //.28 is ~flip limit, 0.53
     }
 
     public void moveBackward() {

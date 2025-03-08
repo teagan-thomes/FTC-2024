@@ -94,8 +94,8 @@ public class TeleOpMain extends LinearOpMode {
                     gamepad1.left_stick_x,        // x
                     gamepad1.right_stick_x,       // rx
                     gamepad1.y,                   // forward
-                    gamepad1.b                   // reverse
-//                    gamepad1.left_trigger,        // 1/2 speed
+                    gamepad1.b,                   // reverse
+                    gamepad1.left_bumper        // 1/2 speed
 //                    gamepad1.right_trigger        // 1/4 speed
             );
 
@@ -120,7 +120,7 @@ public class TeleOpMain extends LinearOpMode {
                     gamepad1.right_trigger,        // extend
                     gamepad1.left_trigger,         // retract
                     gamepad1.right_bumper,       // extend gradually
-                    gamepad1.left_bumper         // retract gradually
+                    gamepad1.dpad_down         // retract gradually
             );
 
             intake.checkInputs(
