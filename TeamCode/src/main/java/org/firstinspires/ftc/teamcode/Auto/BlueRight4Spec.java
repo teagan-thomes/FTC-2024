@@ -181,6 +181,8 @@ public class BlueRight4Spec extends LinearOpMode {
 		GrabberSuckAction grabberSuck = new GrabberSuckAction(intake, 1250);
 		GrabberSuckAction grabberSuckLonger = new GrabberSuckAction(intake, 1500);
 		GrabberSpitAction grabberSpit = new GrabberSpitAction(intake, 1500, 750);
+		GrabberSpitAction grabberSpitLonger = new GrabberSpitAction(intake, 1500, 850);
+
 
 		SpecimenGrabberGrabAction specimenGrab = new SpecimenGrabberGrabAction(viperSlide, 1500);
 		SpecimenGrabberGrabAction specimenGrabLong = new SpecimenGrabberGrabAction(viperSlide, 2500);
@@ -266,7 +268,7 @@ public class BlueRight4Spec extends LinearOpMode {
 						new ParallelAction(
 								driveToGetSecond3,
 								hSlideBackwardLess,
-								grabberSpit
+								grabberSpitLonger
 						),
 
 						new ParallelAction(

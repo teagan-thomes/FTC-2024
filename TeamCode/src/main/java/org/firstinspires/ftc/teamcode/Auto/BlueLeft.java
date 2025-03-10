@@ -74,8 +74,8 @@ public class BlueLeft extends LinearOpMode {
         ));
         AccelConstraint slowAccelConstraint = new ProfileAccelConstraint(-10, 20);
 
-        double scorexPos = 10.1; //10.3
-        double scoreyPos = 16.8;   //17
+        double scorexPos = 10.0; //10.3, 10.1
+        double scoreyPos = 16.9;   //17, 16.8
         double pickUpxPos1 = 14.5; //14.5
         double pickUpxPos2 = 19.5; //18, 19
 
@@ -120,7 +120,7 @@ public class BlueLeft extends LinearOpMode {
                 .splineToLinearHeading(new Pose2d((pickUpxPos1 + 3), 16, Math.toRadians(42.5)), Math.toRadians(0),
                         baseVelConstraint,
                         baseAccelConstraint)
-                .strafeToLinearHeading(new Vector2d((pickUpxPos1 + 3 + 4.5), 22), Math.toRadians(42.5),
+                .strafeToLinearHeading(new Vector2d((pickUpxPos1 + 3 + 6.5), 23.5), Math.toRadians(42.5),
                         slowVelConstraint,
                         slowAccelConstraint);
 
@@ -137,7 +137,7 @@ public class BlueLeft extends LinearOpMode {
                         baseAccelConstraint);
 
         //Actions
-        ViperToPositionAction viperAllTheWayUpAtTheTopToScoreASampleInHighBucket = new ViperToPositionAction(viperSlide, 4250);
+        ViperToPositionAction viperAllTheWayUpAtTheTopToScoreASampleInHighBucket = new ViperToPositionAction(viperSlide, 4300);
         ViperDownForTimeAction viperDownALittle = new ViperDownForTimeAction(viperSlide, 300);
         ViperToRestAction viperToRest = new ViperToRestAction(viperSlide);
         ViperStopAction viperStop = new ViperStopAction(viperSlide);
@@ -154,7 +154,7 @@ public class BlueLeft extends LinearOpMode {
         WristUpAction wristUp = new WristUpAction(intake);
 
         GrabberSuckAction grabberSuck = new GrabberSuckAction(intake, 2300);
-        GrabberSuckAction grabberSuckLonger = new GrabberSuckAction(intake, 3000);
+        GrabberSuckAction grabberSuckLonger = new GrabberSuckAction(intake, 3300);
         GrabberSpitAction grabberSpit = new GrabberSpitAction(intake, 2000, 1000);
 
 
