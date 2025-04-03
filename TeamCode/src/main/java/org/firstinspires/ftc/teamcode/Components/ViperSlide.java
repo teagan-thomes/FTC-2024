@@ -44,9 +44,12 @@ public class ViperSlide{
     public double holdPower = .2;
     boolean wasScorePressed = false;
 
+    private boolean slideMovedLastIteration = false;
+    private double lastStopPosition;
 
 
-    double lastPosition;
+
+    int lastPosition;
     private Queue<Double> pastPositions;
     private static final int positionHistorySize = 5;
     String specimenGrabberPos = "closed";
@@ -79,11 +82,14 @@ public class ViperSlide{
         leftViper.setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
         rightViper.setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
 
-        leftViper.setMode(DcMotorEx.RunMode.RUN_USING_ENCODER);
-        rightViper.setMode(DcMotorEx.RunMode.RUN_USING_ENCODER);
+        leftViper.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
+        rightViper.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
 
-        leftViper.setZeroPowerBehavior(DcMotorEx.ZeroPowerBehavior.BRAKE);
-        rightViper.setZeroPowerBehavior(DcMotorEx.ZeroPowerBehavior.BRAKE);
+//        leftViper.setZeroPowerBehavior(DcMotorEx.ZeroPowerBehavior.BRAKE);
+//        rightViper.setZeroPowerBehavior(DcMotorEx.ZeroPowerBehavior.BRAKE);
+
+        this.lastStopPosition = getPos();
+
 
         pastPositions = new LinkedList<>();
 
@@ -110,8 +116,8 @@ public class ViperSlide{
     }
 
     public void checkInputs(
-            Float retractSpeed,
-            Float extendSpeed,
+            Float retractTrigger,
+            Float extendTrigger,
             Boolean resetEncoders,
 //            Boolean hold,
             Boolean bucketRest,
@@ -125,9 +131,16 @@ public class ViperSlide{
             Boolean bucketSpecimenReset
 //            Boolean scoreSpecimen
     ) {
+
+        double retractSpeed = retractTrigger;
+        double extendSpeed = extendTrigger;
+
+
+
         // Move Viper
         if (retractSpeed != 0) {
             setPower(-retractSpeed);
+            slideMovedLastIteration = true;
         }
         else if (extendSpeed != 0) {
             if(getPos() > autoFlipPosition && getPos() < autoFlipPosition + 500) { // TODO test this
@@ -135,10 +148,20 @@ public class ViperSlide{
                 closeBucket();
             }
             setPower(extendSpeed);
+            slideMovedLastIteration = true;
         }
         else {
             stop();
+            slideMovedLastIteration = false;
         }
+
+        if(slideMovedLastIteration) {
+            lastStopPosition = getPos();
+        }
+
+        telemetry.addData("last pos: " + lastStopPosition, "current pos: " + getPos());
+
+
         telemetry.addData("Left Viper Position: ", leftViper.getCurrentPosition());
         telemetry.addData("Right Viper Position: ", rightViper.getCurrentPosition());
         telemetry.addData("Viper power: ", rightViper.getCurrent(CurrentUnit.AMPS));
@@ -227,29 +250,13 @@ public class ViperSlide{
             openBucket();
         }
 
-//        if(wasScorePressed && !scoreSpecimen) {
-//            telemetry.addData("Score Specimen", "released");
-//        }
-
-//        if(scoreSpecimen) {
-//            goToPosition(2600);
-//            bucketSpecimen();
-//
-//        }
-
-//        if(goToPositionUp) {
-//            goToPositionTest(2000);
-//        }
-//
-//        if(goToPositionDown) {
-//            goToPositionTest(0);
-//        }
-
     }
 
     public void stop() {
-        leftViper.setPower(0);
-        rightViper.setPower(0);
+        leftViper.setTargetPosition(-lastPosition);
+        rightViper.setTargetPosition(lastPosition);
+
+        telemetry.addData("set target pos to", lastPosition);
     }
 
     public double getPos() {
@@ -264,50 +271,48 @@ public class ViperSlide{
         rightViper.setMode(DcMotorEx.RunMode.RUN_USING_ENCODER);
     }
 
-    public void holdPosition(double holdPosition) {
-        double holdPower = 0.6;
-        double holdPowerIncrement = 0.05;
-        double maxHoldPower = 1.0;
-        double minHoldPower = 0.0;
-
-        double currentPosition = getPos();
-        telemetry.addData("Holding at", holdPosition);
-
-        pastPositions.add(currentPosition);
-        if (pastPositions.size() > positionHistorySize) {
-            pastPositions.poll();
-        }
-
-        double averagePosition = pastPositions.stream().mapToDouble(Double::doubleValue).average().orElse(currentPosition);
-
-        if (lastPosition > currentPosition) {
-            telemetry.addData("Slide fell: " + (lastPosition - currentPosition), " since last update");
-            holdPower = Math.min(holdPower + holdPowerIncrement, maxHoldPower);
-        } else if (lastPosition < currentPosition) {
-            telemetry.addData("Slide raised: " + (currentPosition - lastPosition), " since last update");
-            holdPower = Math.max(holdPower - holdPowerIncrement, minHoldPower);
-        } else {
-            telemetry.addData("not moving", "since last update");
-        }
-
-        lastPosition = currentPosition;
-
-        if (averagePosition > holdPosition) {
-            leftViper.setPower(-holdPower);
-            rightViper.setPower(holdPower);
-            telemetry.addData("slide", holdPower);
-            telemetry.addData("average position", averagePosition);
-        } else if (averagePosition < holdPosition) {
-            leftViper.setPower(holdPower);
-            rightViper.setPower(holdPower);
-            telemetry.addData("slide going up at", holdPower);
-            telemetry.addData("average position", averagePosition);
-        } else {
-            stop();
-        }
-
-        telemetry.addData("Viper Position: ", currentPosition);
-    }
+//    public void holdPosition(double holdPosition) {
+//        double holdPower = 0.6;
+//        double holdPowerIncrement = 0.05;
+//        double maxHoldPower = 1.0;
+//        double minHoldPower = 0.0;
+//
+//        double currentPosition = getPos();
+//        telemetry.addData("Holding at", holdPosition);
+//
+//        pastPositions.add(currentPosition);
+//        if (pastPositions.size() > positionHistorySize) {
+//            pastPositions.poll();
+//        }
+//
+//        double averagePosition = pastPositions.stream().mapToDouble(Double::doubleValue).average().orElse(currentPosition);
+//
+//        if (lastPosition > currentPosition) {
+//            telemetry.addData("Slide fell: " + (lastPosition - currentPosition), " since last update");
+//            holdPower = Math.min(holdPower + holdPowerIncrement, maxHoldPower);
+//        } else if (lastPosition < currentPosition) {
+//            telemetry.addData("Slide raised: " + (currentPosition - lastPosition), " since last update");
+//            holdPower = Math.max(holdPower - holdPowerIncrement, minHoldPower);
+//        } else {
+//            telemetry.addData("not moving", "since last update");
+//        }
+//
+//        if (averagePosition > holdPosition) {
+//            leftViper.setPower(-holdPower);
+//            rightViper.setPower(holdPower);
+//            telemetry.addData("slide", holdPower);
+//            telemetry.addData("average position", averagePosition);
+//        } else if (averagePosition < holdPosition) {
+//            leftViper.setPower(holdPower);
+//            rightViper.setPower(holdPower);
+//            telemetry.addData("slide going up at", holdPower);
+//            telemetry.addData("average position", averagePosition);
+//        } else {
+//            stop();
+//        }
+//
+//        telemetry.addData("Viper Position: ", currentPosition);
+//    }
 
 
     public void goToPosition(int position) {
