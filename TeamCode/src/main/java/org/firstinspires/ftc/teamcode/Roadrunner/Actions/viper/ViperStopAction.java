@@ -16,7 +16,7 @@ public class ViperStopAction implements Action {
 
     @Override
     public boolean run(@NonNull TelemetryPacket telemetryPacket) {
-        viperSlide.stop();
+        viperSlide.stopForAction();
 
 
         return false;

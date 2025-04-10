@@ -84,6 +84,16 @@ public class ViperSlide {
         rightViper.setPower(power);
     }
 
+    public void setZeroPowerMode(String mode) {
+        if (mode.equals("BRAKE")) {
+            leftViper.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+            rightViper.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        } else if (mode.equals("FLOAT")) {
+            leftViper.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
+            rightViper.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
+        }
+    }
+
     public void checkInputs(
             Float retractTrigger,
             Float extendTrigger,
@@ -115,7 +125,7 @@ public class ViperSlide {
             setPower(extendSpeed);
             slideMovedLastIteration = true;
         } else {
-            stop();
+            stopForAction();
             slideMovedLastIteration = false;
         }
 
@@ -177,6 +187,11 @@ public class ViperSlide {
         telemetry.addData("set target pos to", lastStopPosition);
     }
 
+    public void stopForAction() {
+        leftViper.setPower(0);
+        rightViper.setPower(0);
+    }
+
     public double getPos() {
         return rightViper.getCurrentPosition();
     }
@@ -190,12 +205,12 @@ public class ViperSlide {
 
     public void goToPosition(int position) {
         while (rightViper.getCurrentPosition() < position) setPower(1);
-        stop();
+        stopForAction();
     }
 
     public void goToRest() {
         while (rightViper.getCurrentPosition() > 200 && rightViper.getCurrent(CurrentUnit.AMPS) < 6) setPower(-1);
-        stop();
+        stopForAction();
     }
 
     public Action goToPositionAction(int position) {
@@ -205,7 +220,7 @@ public class ViperSlide {
             public boolean run(@NonNull TelemetryPacket packet) {
                 if (getPos() < position) setPower(1);
                 else if (getPos() > position) setPower(-1);
-                else stop();
+                else stopForAction();
                 packet.put("Viper Position", getPos());
                 return getPos() >= (position - error) && getPos() <= (position + error);
             }

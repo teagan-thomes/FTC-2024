@@ -54,6 +54,7 @@ public class BlueLeft extends LinearOpMode {
         HorizontalSlide hSlide = new HorizontalSlide(this, 3, mainDrive);
         Intake intake = new Intake(this, hSlide, mainDrive);
 
+        viperSlide.setZeroPowerMode("BRAKE");
         viperSlide.resetEncoders();
 
         // RR-specific initialization

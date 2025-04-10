@@ -58,6 +58,8 @@ public class BlueRight4Spec extends LinearOpMode {
 		HorizontalSlide hSlide = new HorizontalSlide(this, 3, mainDrive);
 		Intake intake = new Intake(this, hSlide, mainDrive);
 
+		viperSlide.setZeroPowerMode("BRAKE");
+
 		// hSlide.resetEncoder();
 		viperSlide.resetEncoders();
 

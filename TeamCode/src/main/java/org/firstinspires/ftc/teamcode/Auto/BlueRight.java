@@ -59,6 +59,7 @@ public class BlueRight extends LinearOpMode {
         Intake intake = new Intake(this, hSlide, mainDrive);
 
 //        hSlide.resetEncoder();
+        viperSlide.setZeroPowerMode("BRAKE");
         viperSlide.resetEncoders();
 
         // RR-specific initialization

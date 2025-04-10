@@ -47,7 +47,7 @@ public class ViperToPositionAction implements Action {
             }
         }
         else {
-            viperSlide.stop();
+            viperSlide.stopForAction();
         }
 
         return !inPositionRange;

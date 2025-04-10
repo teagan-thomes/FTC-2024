@@ -23,7 +23,7 @@ public class ViperDownForTimeAction implements Action {
     public boolean run(@NonNull TelemetryPacket telemetryPacket) {
         viperSlide.setPower(-1);
         sleep(time);
-        viperSlide.stop();
+        viperSlide.stopForAction();
         return false;
     }
 }
