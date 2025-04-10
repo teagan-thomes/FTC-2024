@@ -22,10 +22,8 @@ import org.firstinspires.ftc.teamcode.Roadrunner.Actions.viper.ViperToPositionAc
 import java.util.LinkedList;
 import java.util.Objects;
 import java.util.Queue;
-import java.util.stream.Collectors;
-import java.util.Timer;
 
-public class ViperSlide{
+public class ViperSlide {
     private DcMotorEx leftViper;
     private DcMotorEx rightViper;
 
@@ -44,21 +42,16 @@ public class ViperSlide{
     public double holdPower = .2;
     boolean wasScorePressed = false;
 
+    private boolean slideMovedLastIteration = false;
+    private double lastStopPosition;
 
-
-    double lastPosition;
     private Queue<Double> pastPositions;
     private static final int positionHistorySize = 5;
     String specimenGrabberPos = "closed";
     String bucketOpenClose = "open";
 
-
     ViperToPositionAction specimenAction = new ViperToPositionAction(this, 2600);
     ViperDownForTimeAction scoreAction = new ViperDownForTimeAction(this, 500);
-
-
-
-
 
     public ViperSlide(OpMode opMode) {
         this.telemetry = opMode.telemetry;
@@ -74,33 +67,15 @@ public class ViperSlide{
         leftSpecimen = hardwareMap.get(Servo.class, "leftSpecimen");
         rightSpecimen = hardwareMap.get(Servo.class, "rightSpecimen");
 
-
-
         leftViper.setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
         rightViper.setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
 
-        leftViper.setMode(DcMotorEx.RunMode.RUN_USING_ENCODER);
-        rightViper.setMode(DcMotorEx.RunMode.RUN_USING_ENCODER);
-
-        leftViper.setZeroPowerBehavior(DcMotorEx.ZeroPowerBehavior.BRAKE);
-        rightViper.setZeroPowerBehavior(DcMotorEx.ZeroPowerBehavior.BRAKE);
+        this.lastStopPosition = getPos();
 
         pastPositions = new LinkedList<>();
 
-
-        // initialize
-
-        // why is this here
-//        leftBucket.setPosition(1);
-//        rightBucket.setPosition(0);
-//
-//        leftViper.setTargetPosition(-2000);
-//        rightViper.setTargetPosition(2000);
-
-
         bucketRest();
         openBucket();
-
         grabSpecimen();
     }
 
@@ -110,146 +85,96 @@ public class ViperSlide{
     }
 
     public void checkInputs(
-            Float retractSpeed,
-            Float extendSpeed,
+            Float retractTrigger,
+            Float extendTrigger,
             Boolean resetEncoders,
-//            Boolean hold,
             Boolean bucketRest,
             Boolean bucketScore,
             Boolean openBucket,
             Boolean closeBucket,
-//            Boolean opencloseBucket,
             Boolean grabSpecimen,
             Boolean releaseSpecimen,
             Boolean bucketSpecimen,
             Boolean bucketSpecimenReset
-//            Boolean scoreSpecimen
     ) {
-        // Move Viper
+        double retractSpeed = retractTrigger;
+        double extendSpeed = extendTrigger;
+
         if (retractSpeed != 0) {
+            leftViper.setMode(DcMotorEx.RunMode.RUN_USING_ENCODER);
+            rightViper.setMode(DcMotorEx.RunMode.RUN_USING_ENCODER);
             setPower(-retractSpeed);
-        }
-        else if (extendSpeed != 0) {
-            if(getPos() > autoFlipPosition && getPos() < autoFlipPosition + 500) { // TODO test this
+            slideMovedLastIteration = true;
+        } else if (extendSpeed != 0) {
+            leftViper.setMode(DcMotorEx.RunMode.RUN_USING_ENCODER);
+            rightViper.setMode(DcMotorEx.RunMode.RUN_USING_ENCODER);
+            if (getPos() > autoFlipPosition && getPos() < autoFlipPosition + 500) {
                 bucketScore();
                 closeBucket();
             }
             setPower(extendSpeed);
-        }
-        else {
+            slideMovedLastIteration = true;
+        } else {
             stop();
+            slideMovedLastIteration = false;
         }
+
+        if (slideMovedLastIteration) {
+            lastStopPosition = getPos();
+        }
+
+        telemetry.addData("last pos: " + lastStopPosition, "current pos: " + getPos());
         telemetry.addData("Left Viper Position: ", leftViper.getCurrentPosition());
         telemetry.addData("Right Viper Position: ", rightViper.getCurrentPosition());
         telemetry.addData("Viper power: ", rightViper.getCurrent(CurrentUnit.AMPS));
 
-//        // Hold Position
-//        if(hold) {
-//            holdPosition(getPos());
-//        }
+        if (resetEncoders) resetEncoders();
 
-        // Reset Encoders
-        if(resetEncoders) {
-            resetEncoders();
-        }
-
-        // Bucket
-        if(bucketScore) { // TODO close specimen grabber so we can flip
-            if(getPos() > minFlipLimit) {
-                if(Objects.equals(specimenGrabberPos, "open")) {
-                    grabSpecimen();
-
-                }
-                else if(Objects.equals(specimenGrabberPos, "closed")) {
-                    telemetry.addData("grabber pos", "was closed");
-                    closeBucket();
-                    bucketScore();
-                }
+        if (bucketScore && getPos() > minFlipLimit) {
+            if (Objects.equals(specimenGrabberPos, "open")) grabSpecimen();
+            else {
+                telemetry.addData("grabber pos", "was closed");
+                closeBucket();
+                bucketScore();
             }
         }
 
-        if(bucketRest) {
-            if(getPos() > 300 && Objects.equals(specimenGrabberPos, "closed")) {
-                bucketRest();
-                openBucket();
-            }
-
-//            if(bucketCooldownTimer != null && bucketCooldownTimer.seconds() < 1)
-//                bucketRest();
-//            else
-//                bucketCooldownTimer = null;
-        }
-
-        if(openBucket) {
-            openBucket();
-            bucketOpenClose = "open";
-            telemetry.addData("Bucket Flap Position", bucketFlap.getPosition());
-            telemetry.addData("Bucket Flap Position", "open");
-        }
-        else if(closeBucket) {
-            closeBucket();
-            bucketOpenClose = "closed";
-            telemetry.addData("Bucket Flap Position", bucketFlap.getPosition());
-            telemetry.addData("Bucket Flap Position", "closed");
-        }
-
-//        if(opencloseBucket) {
-//            if(Objects.equals(bucketOpenClose, "open")) {
-//                closeBucket();
-//                bucketOpenClose = "closed";
-//            }
-//            else {
-//                openBucket();
-//                bucketOpenClose = "open";
-//            }
-//        }
-
-        if(grabSpecimen) {
-            specimenGrabberPos = "closed";
-//            leftSpecimen.setPosition(0);
-//            rightSpecimen.setPosition(1);
-            grabSpecimen();
-        }
-        else if(releaseSpecimen) {
-            specimenGrabberPos = "open";
-//            leftSpecimen.setPosition(0.6);
-//            rightSpecimen.setPosition(0.4);
-            releaseSpecimen();
-        }
-
-        if(bucketSpecimen) {
-            bucketSpecimen();
-            closeBucket();
-        }
-
-        if(bucketSpecimenReset) {
+        if (bucketRest && getPos() > 300 && Objects.equals(specimenGrabberPos, "closed")) {
             bucketRest();
             openBucket();
         }
 
-//        if(wasScorePressed && !scoreSpecimen) {
-//            telemetry.addData("Score Specimen", "released");
-//        }
+        if (openBucket) {
+            openBucket();
+            bucketOpenClose = "open";
+            telemetry.addData("Bucket Flap Position", bucketFlap.getPosition());
+        } else if (closeBucket) {
+            closeBucket();
+            bucketOpenClose = "closed";
+            telemetry.addData("Bucket Flap Position", bucketFlap.getPosition());
+        }
 
-//        if(scoreSpecimen) {
-//            goToPosition(2600);
-//            bucketSpecimen();
-//
-//        }
+        if (grabSpecimen) grabSpecimen();
+        else if (releaseSpecimen) releaseSpecimen();
 
-//        if(goToPositionUp) {
-//            goToPositionTest(2000);
-//        }
-//
-//        if(goToPositionDown) {
-//            goToPositionTest(0);
-//        }
+        if (bucketSpecimen) {
+            bucketSpecimen();
+            closeBucket();
+        }
 
+        if (bucketSpecimenReset) {
+            bucketRest();
+            openBucket();
+        }
     }
 
     public void stop() {
-        leftViper.setPower(0);
-        rightViper.setPower(0);
+        lastStopPosition = getPos();
+        leftViper.setTargetPosition(-(int) lastStopPosition);
+        rightViper.setTargetPosition((int) lastStopPosition);
+        leftViper.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
+        rightViper.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
+        telemetry.addData("set target pos to", lastStopPosition);
     }
 
     public double getPos() {
@@ -259,86 +184,17 @@ public class ViperSlide{
     public void resetEncoders() {
         leftViper.setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
         rightViper.setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
-
         leftViper.setMode(DcMotorEx.RunMode.RUN_USING_ENCODER);
         rightViper.setMode(DcMotorEx.RunMode.RUN_USING_ENCODER);
     }
 
-    public void holdPosition(double holdPosition) {
-        double holdPower = 0.6;
-        double holdPowerIncrement = 0.05;
-        double maxHoldPower = 1.0;
-        double minHoldPower = 0.0;
-
-        double currentPosition = getPos();
-        telemetry.addData("Holding at", holdPosition);
-
-        pastPositions.add(currentPosition);
-        if (pastPositions.size() > positionHistorySize) {
-            pastPositions.poll();
-        }
-
-        double averagePosition = pastPositions.stream().mapToDouble(Double::doubleValue).average().orElse(currentPosition);
-
-        if (lastPosition > currentPosition) {
-            telemetry.addData("Slide fell: " + (lastPosition - currentPosition), " since last update");
-            holdPower = Math.min(holdPower + holdPowerIncrement, maxHoldPower);
-        } else if (lastPosition < currentPosition) {
-            telemetry.addData("Slide raised: " + (currentPosition - lastPosition), " since last update");
-            holdPower = Math.max(holdPower - holdPowerIncrement, minHoldPower);
-        } else {
-            telemetry.addData("not moving", "since last update");
-        }
-
-        lastPosition = currentPosition;
-
-        if (averagePosition > holdPosition) {
-            leftViper.setPower(-holdPower);
-            rightViper.setPower(holdPower);
-            telemetry.addData("slide", holdPower);
-            telemetry.addData("average position", averagePosition);
-        } else if (averagePosition < holdPosition) {
-            leftViper.setPower(holdPower);
-            rightViper.setPower(holdPower);
-            telemetry.addData("slide going up at", holdPower);
-            telemetry.addData("average position", averagePosition);
-        } else {
-            stop();
-        }
-
-        telemetry.addData("Viper Position: ", currentPosition);
-    }
-
-
     public void goToPosition(int position) {
-        while (rightViper.getCurrentPosition() < position) {
-            setPower(1);
-        }
-        stop();
-    }
-
-    public void goToPositionTest(int position) {
-
-        leftViper.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
-        rightViper.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
-
-//        if (position < rightViper.getCurrentPosition()) {
-//            setPower(-1);
-//        }
-//
-//        if (position > rightViper.getCurrentPosition()) {
-//            setPower(1);
-//        }
-
-        setPower(1);
-
+        while (rightViper.getCurrentPosition() < position) setPower(1);
         stop();
     }
 
     public void goToRest() {
-        while ((rightViper.getCurrentPosition() > 200) && (rightViper.getCurrent(CurrentUnit.AMPS) < 6)) {
-            setPower(-1);
-        }
+        while (rightViper.getCurrentPosition() > 200 && rightViper.getCurrent(CurrentUnit.AMPS) < 6) setPower(-1);
         stop();
     }
 
@@ -347,18 +203,10 @@ public class ViperSlide{
         return new Action() {
             @Override
             public boolean run(@NonNull TelemetryPacket packet) {
-                if (getPos() < position) {
-                    setPower(1);
-                }
-                else if(getPos() > position) {
-                    setPower(-1);
-                }
-                else {
-                    stop();
-                }
-
+                if (getPos() < position) setPower(1);
+                else if (getPos() > position) setPower(-1);
+                else stop();
                 packet.put("Viper Position", getPos());
-
                 return getPos() >= (position - error) && getPos() <= (position + error);
             }
         };
@@ -367,11 +215,6 @@ public class ViperSlide{
     public double getCurrentPower() {
         return rightViper.getCurrent(CurrentUnit.AMPS);
     }
-
-
-
-    // bucket
-
 
     public void setBucketPosition(double leftPosition, double rightPosition) {
         leftBucket.setPosition(leftPosition);
@@ -389,9 +232,8 @@ public class ViperSlide{
 
     public void bucketScore() {
         setBucketPosition(1, 0);
-    } // .49, .51
+    }
 
-    //TODO DOUBLE CHECK SCORING ANGLE
     public void bucketSpecimen() {
         setBucketPosition(.2, .8);
     }
@@ -404,9 +246,6 @@ public class ViperSlide{
         setBucketFlapPosition(.4);
     }
 
-
-
-    // specimen grabber
     public void setSpecimenGrabberPos(double position) {
     }
 
@@ -422,4 +261,3 @@ public class ViperSlide{
         specimenGrabberPos = "open";
     }
 }
-
