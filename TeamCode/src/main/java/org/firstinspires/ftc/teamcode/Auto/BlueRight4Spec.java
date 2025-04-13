@@ -122,7 +122,7 @@ public class BlueRight4Spec extends LinearOpMode {
 						intakeAccelConstraint);
 
 		TrajectoryActionBuilder traj7 = traj6.endTrajectory().fresh()
-				.strafeToLinearHeading(new Vector2d(15, -28), Math.toRadians(-135),
+				.strafeToLinearHeading(new Vector2d(18, -28), Math.toRadians(-135),
 						baseVelConstraint,
 						baseAccelConstraint);
 
@@ -282,7 +282,7 @@ public class BlueRight4Spec extends LinearOpMode {
 		);
 
 		viperSlide.resetEncoders();
-		sleep(50);
+		sleep(75);
 
 		Actions.runBlocking(
 				new SequentialAction(
@@ -308,7 +308,7 @@ public class BlueRight4Spec extends LinearOpMode {
 		);
 
 		viperSlide.resetEncoders();
-		sleep(50);
+		sleep(75);
 
 		Actions.runBlocking(
 				new SequentialAction(
@@ -332,7 +332,7 @@ public class BlueRight4Spec extends LinearOpMode {
 		);
 
 		viperSlide.resetEncoders();
-		sleep(50);
+		sleep(75);
 
 		Actions.runBlocking(
 				new SequentialAction(

@@ -125,7 +125,7 @@ public class ViperSlide {
             setPower(extendSpeed);
             slideMovedLastIteration = true;
         } else {
-            stopForAction();
+            stop();
             slideMovedLastIteration = false;
         }
 
